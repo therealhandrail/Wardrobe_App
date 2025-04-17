@@ -12,7 +12,7 @@ function Navbar() {
       </div>
       <div className="namebar">
         <Link to="./Login">Login</Link>
-        <Link to="/Register">Register</Link>
+        <Link to="./Register">Register</Link>
       </div>
     </nav>
   );
