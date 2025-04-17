@@ -1,7 +1,7 @@
 import SearchBar from "./elements/searchBar.jsx";
 import myOutfitBox from "./elements/myOutfitBox";
 import mainPageBox from "./elements/mainPageBox";
-import "./stylesheets/Home.css";
+import "./stylesheets/home.css";
 
 function Home() {
   return (
