@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./stylesheets/authform.css";
+import "./stylesheets/authForm.css";
 import LOGO from "./assets/Wardrobe_App_Logo.png";
 
 function Register() {
