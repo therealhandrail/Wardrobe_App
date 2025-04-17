@@ -1,3 +1,5 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL || 'postgresql://wardrobe_capstone_db_tvza_user:YIfUfVrg40lNCCyWXiLvLNNYPEEzhE06@dpg-d004ba2li9vc739hi1kg-a/wardrobe_capstone_db_tvza'); //Change source later
 const uuid = require('uuid');
