@@ -47,8 +47,10 @@ const {
 } = require('./db');
 const express = require('express');
 const { seedDatabases } = require('./dbSeed');
+const cors = require('cors');
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // Necessary functions/routes to access your account and access your account info
 const isLoggedIn = async(req, res, next)=> {
