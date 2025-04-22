@@ -1,24 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LOGO from "./assets/Wardrobe_App_Logo.png";
-import "./stylesheets/authForm.css";
+import "./stylesheets/authform.css";
 
-function Login() {
+function Login({setToken}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [ setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // API call here
-    if (username === "user" && password === "password") {
-      // Store authentication token or user info (e.g., in local storage)
-      localStorage.setItem("isLoggedIn", "true");
-      navigate("/home");
+
+    const response = await fetch(
+      
+      "https://wardrobe-app-xb6n.onrender.com/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: username, password: password }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.token) {
+      setToken(result.token);
+      setError(null);
+      localStorage.setItem('token', result.token);
+      navigate(`/`);
     } else {
-      alert("Invalid credentials");
+      setError("Invalid Credentials");
     }
-  };
+  
+};
 
   return (
     <div className="authContainer">
