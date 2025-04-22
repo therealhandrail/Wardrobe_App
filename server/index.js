@@ -48,7 +48,29 @@ const {
 const express = require('express');
 const { seedDatabases } = require('./dbSeed');
 const app = express();
+const cors = require('cors');
+
+const allowedOrigins = [
+    'http://localhost:5177',
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+
 
 // Necessary functions/routes to access your account and access your account info
 const isLoggedIn = async(req, res, next)=> {
