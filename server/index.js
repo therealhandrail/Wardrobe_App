@@ -47,8 +47,10 @@ const {
 } = require('./db');
 const express = require('express');
 const { seedDatabases } = require('./dbSeed');
+const cors = require('cors');
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 
 
