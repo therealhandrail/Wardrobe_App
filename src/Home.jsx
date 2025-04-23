@@ -1,6 +1,5 @@
-import SearchBar from "./elements/searchBar.jsx";
 import myOutfitBox from "./elements/myOutfitBox";
-import mainPageBox from "./elements/mainPageBox";
+import PublicOutfits from "./elements/PublicOutfits";
 import "./stylesheets/home.css";
 
 function Home() {
@@ -9,7 +8,7 @@ function Home() {
     <div className="home">
       <section className="leftBox">{myOutfitBox()}</section>
       <section className="rightBox">
-        {mainPageBox()}
+        {PublicOutfits()}
       </section>
     </div>
   );

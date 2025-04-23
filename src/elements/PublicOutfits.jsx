@@ -4,7 +4,7 @@ import "../stylesheets/home.css";
 
 
 // Change to API Fetch when available
-function MainPageBox() {
+function PublicOutfits() {
   const [publicOutfits] = useState([
     {
       id: 1,
@@ -85,5 +85,5 @@ function MainPageBox() {
       </div>
   );
 }
-export default MainPageBox;
+export default PublicOutfits;
 

@@ -7,6 +7,7 @@ import Login from "./Login";
 import Register from "./Register";
 import AddItemPage from "./elements/AddItemPage";
 import AddOutfitPage from "./elements/AddOutfitPage";
+import MyOutfitDetails from "./elements/MyOutfitDetails";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
@@ -31,6 +32,8 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/AddItemPage" element={<AddItemPage token={token}/>} />
           <Route path="/AddOutfitPage" element={<AddOutfitPage token={token}/>} />
+          <Route path="/outfit/:id" element={<MyOutfitDetails token={token}/>} />
+          {/* Add more routes as needed */}
         </Routes>
       </div>
     </div>

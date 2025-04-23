@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
+import MyOutfitDetails from './MyOutfitDetails';
 import {
   getUserOutfits,
   deleteOutfit,
@@ -52,18 +53,6 @@ function myOutfitBox() {
     fetchOutfits();
   }, [fetchOutfits]);
 
-  // Handle Delete ////////////////////////////////////////////////////////
-
-  const handleDelete = async (outfitId) => {
-    try {
-      await deleteOutfit(outfitId);
-      setOutfits(prevOutfits => prevOutfits.filter(outfit => outfit.id !== outfitId));
-      console.log(`Outfit with ID ${outfitId} deleted successfully.`);
-    } catch (error) {
-      console.error("Error deleting outfit:", error);
-    }
-  };
-
 // I wanted to do edits, but I think I'd have to do all new edit pages for each of the items in the outfit
 // skipping the edit section for now, circle back if we have time
 
@@ -92,7 +81,6 @@ function myOutfitBox() {
               <p>{outfit.description}</p>
               <p>Tags: {outfit.tags.join(", ")}</p>
               <p>Private: {outfit.private ? "Yes" : "No"}</p>
-              <button onSubmit={handleDelete}>X</button>
             </Link>
           </div>
         ))}
