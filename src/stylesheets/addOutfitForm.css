@@ -1,22 +1,15 @@
 .addOutfitBox {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin: 10px;
-}
+    justify-content: center;
+    height: 100vh;
+  }
+form.addOutfitForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 100;
 
-.itemSelectionBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-}
-.itemSelectItem{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
 }

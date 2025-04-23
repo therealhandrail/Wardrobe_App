@@ -27,7 +27,7 @@ const addOutfit = () => {
         return;
       }
       try {
-        const response = await getUserClothing(userId);
+        const response = await getUserClothing(userId); // Change to user.id when fetched
         setUserItems(response.data);
       } catch (error) {
         console.error("Error fetching user items:", error);
@@ -99,7 +99,7 @@ const addOutfit = () => {
     <div className="addOutfitBox">
       <h2>Create New Outfit</h2>
     
-      <form onSubmit={handleSubmit}>
+      <form className="addOutfitForm" onSubmit={handleSubmit}>
         {/* Outfit Details */}
         <div>
           <label htmlFor="outfitName">Outfit Name:</label>
@@ -137,7 +137,6 @@ const addOutfit = () => {
             checked={isPrivate}
             onChange={(e) => setIsPrivate(e.target.checked)}
           />
-          <span> (Only visible to you)</span>
         </div>
 
         {/* Item Selection */}
@@ -154,7 +153,7 @@ const addOutfit = () => {
                   type="checkbox"
                   id={`item-${item.id}`}
                   checked={selectedItems.includes(item.id)}
-                  onChange={() => handleItemSelection(item.id)}
+                  onChange={() => handleItemSelect(item.id)}
                   disabled={
                     selectedItems.length >= 10 &&
                     !selectedItems.includes(item.id)

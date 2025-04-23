@@ -38,7 +38,7 @@ const addItem = () => {
 
   return (
     <div className="addItem">
-      <form onSubmit={handleSubmit}>
+      <form className="addItemForm" onSubmit={handleSubmit}>
         <h2>Add Item</h2>
         <label htmlFor="itemName">Item Name</label>
         <input 
@@ -58,6 +58,7 @@ const addItem = () => {
           value={imageUrl}
           onChange={(e) => setimageUrl(e.target.value)}
         />
+        {renderImagePreview()}
         <label htmlFor="itemDescription">Description</label>
         <textarea 
             id="itemDescription"

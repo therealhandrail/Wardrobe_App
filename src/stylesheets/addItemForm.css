@@ -6,7 +6,8 @@
     height: 100vh;
     background-color: #895365;
   }
-form {
+
+  form.addItemForm {
     display: flex;
     flex-direction: column;
     align-items: center;
