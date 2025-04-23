@@ -18,11 +18,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 /* Items */
 
-.mainPageBox {
+.PublicOutfits {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,4 +82,70 @@ button:hover {
     justify-content: center;
     width: 100%;
   }
+}
+
+/* My Outfits Box - preview */
+
+.outfitPreview{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0.5rem;
+}
+
+.outfitPreview a {
+  color: #ffffe8;
+}
+
+.outfitList{
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin: 0.5rem;
+  padding: .5rem;
+}
+
+.outfitList:hover{
+  background-color: #a17282;
+  border-radius: 0.4rem;
+}
+
+/* Public Outfits */
+
+.publicOutfitPreview{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  height: 100vh;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.publicOutfitPreview a {
+  color: #2c262e;
+}
+
+.publicOutfitList{
+  width: 20%;
+  height: 20%;
+  margin: 0.5rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.041);
+  border-radius: 1rem;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.062);
+}
+
+.publicOutfitList:hover{
+  background-color: rgba(0, 0, 0, 0.021);
+}
+
+.publicBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0.5rem;
 }
