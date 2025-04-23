@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LOGO from "./assets/Wardrobe_App_Logo.png";
-import "./stylesheets/authform.css";
+import "./stylesheets/authForm.css";
 
 function Login({setToken}) {
   const [username, setUsername] = useState("");
