@@ -53,6 +53,7 @@ const path = require('path');
 const { fileURLToPath } = require('url');
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
+app.use(express.static(path.join(__dirname, "dist")));
 
 const app = express();
 app.use(express.json());
