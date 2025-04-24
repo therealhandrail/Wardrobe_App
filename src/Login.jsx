@@ -6,7 +6,7 @@ import "./stylesheets/authForm.css";
 function Login({setToken}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [ setError] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
