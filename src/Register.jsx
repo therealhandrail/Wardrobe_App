@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./stylesheets/authForm.css";
 import LOGO from "./assets/Wardrobe_App_Logo.png";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "./client/api";
 
 function Register() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     username: "",
+    email: "",
     password: "",
   });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,25 +23,31 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
 
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const userData = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      };
 
-      if (response.ok) {
-        // Registration successful
-        console.log("Registration successful!");
+      const response = await registerUser(userData);
+
+      if (response.data) {
+        console.log("Registration successful!", response.data);
+        navigate("/login");
       } else {
-        // Registration failed
-        console.error("Registration failed:", response.statusText);
+        console.error("Registration failed:", response);
+        setError(
+          response.data?.message || "Registration failed. Please try again."
+        );
       }
-    } catch (error) {
-      console.error("Error during registration:", error);
+    } catch (err) {
+      console.error("Error during registration:", err);
+      const message =
+        err.response?.data?.message || "An error occurred during registration.";
+      setError(message);
     }
   };
 
@@ -47,31 +56,29 @@ function Register() {
       <form className="authHeader" onSubmit={handleSubmit}>
         <img src={LOGO} alt="Home" height="200rem" />
         <h1>Welcome to Outfitter!</h1>
-        <label>
-          First Name:
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Last Name:
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-        </label>
+        {error && (
+          <p className="error-message" style={{ color: "red" }}>
+            {error}
+          </p>
+        )}
         <label>
           Username:
           <input
-            type="username"
+            type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
         </label>
         <label>
@@ -81,9 +88,12 @@ function Register() {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            required
           />
         </label>
-        <button className="submitBtn">Register</button>
+        <button type="submit" className="submitBtn">
+          Register
+        </button>
       </form>
     </div>
   );
