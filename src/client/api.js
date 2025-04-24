@@ -12,7 +12,9 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    //
+    const token = localStorage.getItem("AuthToken");
+    //
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -91,8 +93,7 @@ export const getReviewComments = (outfitId, reviewId) =>
   apiClient.get(`/outfits/${outfitId}/reviews/${reviewId}/comments`);
 export const getCommentById = (outfitId, reviewId, commentId) =>
   apiClient.get(
-    `/outfits/${outfitId}/reviews/${reviewId}/comments/${commentId}`
-  );
+    `/outfits/${outfitId}/reviews/${reviewId}/comments/${commentId}`  );
 export const createComment = (outfitId, reviewId, commentData) =>
   apiClient.post(
     `/outfits/${outfitId}/reviews/${reviewId}/comments`,
@@ -112,3 +113,4 @@ export const getAllUsers = () => apiClient.get("/users");
 export const getUserById = (userId) => apiClient.get(`/users/${userId}`);
 
 export default apiClient;
+

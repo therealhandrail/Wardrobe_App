@@ -59,11 +59,22 @@ app.use(cors());
 
 // Necessary functions/routes to access your account and access your account info
 const isLoggedIn = async(req, res, next)=> {
+  console.log('isLoggedIn middleware triggered.');
+  console.log('Authorization Header Received:', req.headers.authorization);
   try {
-    req.user = await findUserWithToken(req.headers.authorization);
+    //
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new Error('Authorization header missing or invalid');
+    }
+    const token = authHeader.split(' ')[1]; // Extract token
+    req.user = await findUserWithToken(token); // Pass only the token
+    console.log('Token verified, user attached:', req.user?.id);
     next();
+    //
   }
   catch(ex){
+    console.error('Error in isLoggedIn middleware:', ex.message);
     next(ex);
   }
 };

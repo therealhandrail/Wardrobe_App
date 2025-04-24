@@ -159,18 +159,33 @@ const createComment = async({ review_id, user_id, outfit_id, comment })=> {
 
 // Authenticates the provided username and password and returns a token
 const authenticate = async({ username, password })=> {
+  console.log(`Attempting authentication for username: ${username}`); // Log received username
   const SQL = `
     SELECT id, password 
     FROM users 
     WHERE username=$1;
   `;
   const response = await client.query(SQL, [username]);
-  if(!response.rows.length || (await bcrypt.compare(password, response.rows[0].password)) === false){
+  if(!response.rows.length){
+    console.log(`Authentication failed: Username '${username}' not found.`); // Log username not found
     const error = Error('not authorized');
     error.status = 401;
     throw error;
   }
-  const token = await jwt.sign({ id: response.rows[0].id}, JWT);
+  
+  const user = response.rows[0];
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  console.log(`Password comparison result for '${username}': ${passwordMatch}`); // Log bcrypt result
+
+  if(!passwordMatch){
+    console.log(`Authentication failed: Incorrect password for username '${username}'.`); // Log password mismatch
+    const error = Error('not authorized');
+    error.status = 401;
+    throw error;
+  }
+
+  const token = await jwt.sign({ id: user.id}, JWT);
+  console.log(`Authentication successful for '${username}'. Token generated.`); // Log success
   return { token };
 };
 
