@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
 import "./stylesheets/app.css";
 import Navbar from "./Navbar";
 import Home from "./Home";
@@ -10,33 +9,26 @@ import AddOutfitPage from "./elements/AddOutfitPage";
 import MyOutfitDetails from "./elements/MyOutfitDetails";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-
-    if (storedToken) {
-        setToken(storedToken);
-  }
-
-});
-  
+// I moved the token state stuff from App, to authContext
+// I wrapped the entire app in the AuthProvider component in main.jsx
+// so that the token is available to all components
+// we can use the token in any component that needs it, without having to pass it down as props
   
   return (
-    <div className="App">
-      <Navbar setToken={setToken} token={token}/>
-      <div className="content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Login" element={<Login setToken={setToken}/>} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/AddItemPage" element={<AddItemPage token={token}/>} />
-          <Route path="/AddOutfitPage" element={<AddOutfitPage token={token}/>} />
-          <Route path="/outfit/:id" element={<MyOutfitDetails token={token}/>} />
-          {/* Add more routes as needed */}
-        </Routes>
+      <div className="App">
+        <Navbar /> 
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/Login" element={<Login />} /> 
+            <Route path="/Register" element={<Register />} />
+            <Route path="/AddItemPage" element={<AddItemPage />} /> 
+            <Route path="/AddOutfitPage" element={<AddOutfitPage />} />
+            <Route path="/outfit/:outfitId" element={<MyOutfitDetails />} /> 
+          </Routes>
+        </div>
       </div>
-    </div>
   );
 }
 

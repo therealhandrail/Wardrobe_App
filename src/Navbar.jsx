@@ -1,18 +1,16 @@
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./stylesheets/navbar.css";
 import LOGO from "./assets/Wardrobe_App_Logo.png";
+import { useAuth } from './client/authContext';
 
-function Navbar({setToken, token}) {
+function Navbar() {
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
   
-  function handleClick() {
-    setToken(null);
-    localStorage.removeItem('token');
+  const handleLogout = () => {
+    logout();
     navigate(`/`);
-  }
-
+  };
 
   return (
     <nav className="navbar">
@@ -21,15 +19,35 @@ function Navbar({setToken, token}) {
           <img src={LOGO} alt="Home" height="80rem" />
         </Link>
       </div>
-      {!token && (<div className="nav-links">
+      {isAuthenticated ? (
+        <div className="nav-links">
+          <button onClick={handleLogout}>Log Out</button>
+        </div>
+       ) : ( 
+        <div className="nav-links">
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
-      </div>)}
-      {token && (<div className="nav-links">
-          <button onClick={handleClick}>Log Out</button>
-      </div>)}
+        </div>
+       )}
     </nav>
 );
+
+//   return (
+//     <nav className="navbar">
+//       <div className="logo">
+//         <Link to="/">
+//           <img src={LOGO} alt="Home" height="80rem" />
+//         </Link>
+//       </div>
+//       {!token && (<div className="nav-links">
+//           <Link to="/login">Login</Link>
+//           <Link to="/register">Register</Link>
+//       </div>)}
+//       {token && (<div className="nav-links">
+//           <button onClick={handleLogout}>Log Out</button>
+//       </div>)}
+//     </nav>
+// );
 }
 
 export default Navbar;
