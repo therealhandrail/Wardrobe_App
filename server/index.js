@@ -48,12 +48,10 @@ const {
 const express = require('express');
 const { seedDatabases } = require('./dbSeed');
 const cors = require('cors');
-
 const path = require('path');
-app.use(express.static(path.join(__dirname, "dist")));
-
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "dist")));
 app.use(cors());
 //app.options('*', cors());
 
