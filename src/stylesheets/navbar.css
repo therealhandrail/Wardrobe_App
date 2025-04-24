@@ -21,7 +21,7 @@
   display: flex;
   margin: 10px;
 }
-.namebar {
+.nav-links {
   display: flex;
   flex-direction: column;
   justify-content: center;
