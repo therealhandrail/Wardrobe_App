@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import "../stylesheets/home.css";
+import { getPublicOutfits } from '../client/api';
 
 
 // Change to API Fetch when available
