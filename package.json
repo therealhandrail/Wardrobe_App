@@ -7,7 +7,8 @@
     "build": "vite build",
     "start:dev": "nodemon server/index.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:all": "npm install && npm run build && cp ./dist ./server/dist
   },
   "dependencies": {
     "axios": "^1.8.4",
