@@ -24,7 +24,7 @@ function App() {
   
   return (
     <div className="App">
-      <Navbar />
+      <Navbar setToken={setToken} token={token}/>
       <div className="content">
         <Routes>
           <Route path="/" element={<Home />} />
