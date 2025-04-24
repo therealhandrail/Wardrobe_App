@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://wardrobapxb6n.onrender.com/api'; // Adjust if your backend runs elsewhere
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://wardrobe-app-xb6n.onrender.com/api'; // Adjust if your backend runs elsewhere
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
