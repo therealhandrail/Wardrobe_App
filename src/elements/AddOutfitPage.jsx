@@ -1,180 +1,222 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getUserClothing,
   createOutfit,
   addClothingToOutfit,
   addOutfitTag,
 } from "../client/api";
+import { useAuth } from "../client/authContext";
 import "../stylesheets/addOutfitForm.css";
 
-// We can either import the USER id From the internal auth page as an element or call it directly in the code
-
-const addOutfit = () => {
+const AddOutfitPage = () => {
   const [userItems, setUserItems] = useState([]);
+  const [loadingItems, setLoadingItems] = useState(true);
+  const [itemsError, setItemsError] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState(""); // Comma-separated tags
+  const [tags, setTags] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [success, setSuccess] = useState("");
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const fetchUserItems = async () => {
-      // const userId = however we get the user id
-      const userId = 1; // Placeholder for user ID
-      if (!1) {
-        console.error("User ID is not available.");
+      if (!isAuthenticated || !user?.id) {
+        setLoadingItems(false);
+        setUserItems([]);
         return;
       }
+      setLoadingItems(true);
+      setItemsError(null);
       try {
-        const response = await getUserClothing(userId); // Change to user.id when fetched
-        setUserItems(response.data);
+        const response = await getUserClothing(user.id);
+        setUserItems(response.data || []);
       } catch (error) {
         console.error("Error fetching user items:", error);
+        setItemsError("Failed to load your clothing items.");
+        setUserItems([]);
+      } finally {
+        setLoadingItems(false);
       }
     };
+
     fetchUserItems();
-  }, []);
+  }, [user, isAuthenticated]);
 
   const handleItemSelect = (itemId) => {
     if (selectedItems.includes(itemId)) {
       setSelectedItems(selectedItems.filter((id) => id !== itemId));
-    } else {
+    } else if (selectedItems.length < 10) {
       setSelectedItems([...selectedItems, itemId]);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError(null);
+    setSuccess("");
+
+    if (!isAuthenticated || !user?.id) {
+      setSubmitError("You must be logged in to create an outfit.");
+      return;
+    }
+    if (selectedItems.length === 0) {
+      setSubmitError("Please select at least one clothing item for the outfit.");
+      return;
+    }
+
     const outfitData = {
-      name,
-      description,
-      isPrivate,
+      name: name,
+      user_id: user.id,
+      previously_worn: false,
+      share_publicly: !isPrivate
     };
 
-    // This is the core functionality /////////////////////////////////////////////////////
-    // Create the outfit first
+    console.log("Submitting outfit data:", outfitData);
+
     try {
       const outfitResponse = await createOutfit(outfitData);
       const newOutfitId = outfitResponse.data.id;
       console.log("New outfit created with ID:", newOutfitId);
 
-      // Add selected items to the outfit
-      const addClothingPromises = selectedItems.map((itemId) => {
-        return addClothingToOutfit(newOutfitId, itemId);
-      });
+      const addClothingPromises = selectedItems.map((itemId) =>
+        addClothingToOutfit(newOutfitId, itemId)
+      );
       await Promise.all(addClothingPromises);
       console.log("Items added to outfit successfully.");
 
-      // This is where we add the tags, they need to be added to an array
-      if (tags && newOutfitId) {
+      if (tags.trim() !== "") {
         const tagArray = tags
           .split(",")
           .map((tag) => tag.trim())
           .filter((tag) => tag !== "");
-        const tagPromises = tagArray.map((tag) =>
-          addOutfitTag(newOutfitId, { name: tag })
-        );
-        await Promise.all(tagPromises);
-        console.log("Outfit tags added.");
+        if (tagArray.length > 0) {
+          const tagPromises = tagArray.map((tag) =>
+            addOutfitTag(newOutfitId, { name: tag })
+          );
+          await Promise.all(tagPromises);
+          console.log("Outfit tags added.");
+        }
       }
 
       setSuccess(`Outfit '${name}' created successfully!`);
-      // Reset Form
       setName("");
-      setDescription("");
       setTags("");
       setIsPrivate(false);
       setSelectedItems([]);
-      // We can also add a redirect here if needed
+      
+      navigate(`/outfit/${newOutfitId}`);
+
     } catch (error) {
       console.error("Error creating outfit:", error);
-      setSuccess("Error creating outfit. Please try again.");
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+      }
+      setSubmitError(error.response?.data?.message || "Error creating outfit. Please try again.");
     }
   };
 
+  if (!isAuthenticated) {
+    return <div>Redirecting to login...</div>;
+  }
   // End of core functionality /////////////////////////////////////////////////////
 
   return (
     <div className="addOutfitBox">
       <h2>Create New Outfit</h2>
-    
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+      {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
+      
       <form className="addOutfitForm" onSubmit={handleSubmit}>
-        {/* Outfit Details */}
-        <div>
-          <label htmlFor="outfitName">Outfit Name:</label>
-          <input
-            id="outfitName"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="outfitDescription">Description:</label>
-          <textarea
-            id="outfitDescription"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="outfitTags">Tags (comma-separated):</label>
-          <input
-            id="outfitTags"
-            type="text"
-            placeholder="e.g., Formal, Winter, Party"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="isPrivate">Private Outfit:</label>
-          <input
-            id="isPrivate"
-            type="checkbox"
-            checked={isPrivate}
-            onChange={(e) => setIsPrivate(e.target.checked)}
-          />
-        </div>
-
-        {/* Item Selection */}
-        <h3>Select Items (Max 10)</h3>
-        {/* Need to handle for no Items */}
-
-
-          <div className="itemSelectionBox">
-            {" "}
-            {/* Style this grid */}
-            {userItems.map((item) => (
-              <div key={item.id} className="itemSelectItem">
-                <input
-                  type="checkbox"
-                  id={`item-${item.id}`}
-                  checked={selectedItems.includes(item.id)}
-                  onChange={() => handleItemSelect(item.id)}
-                  disabled={
-                    selectedItems.length >= 10 &&
-                    !selectedItems.includes(item.id)
-                  }
-                />
-                <label htmlFor={`item-${item.id}`}>
-                  <img
-                    src={item.imageUrl}
-                    alt={item.title}
-                    style={{ width: "80px", height: "auto" }}
-                  />
-                  <span>{item.title}</span>
-                </label>
-              </div>
-            ))}
+        <div className="form-section">
+          <h3>Details</h3>
+          <div>
+            <label htmlFor="outfitName">Outfit Name:</label>
+            <input
+              id="outfitName"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="e.g., Summer Casual"
+            />
           </div>
-        
+          <div>
+            <label htmlFor="outfitTags">Tags (comma-separated):</label>
+            <input
+              id="outfitTags"
+              type="text"
+              placeholder="e.g., beach, vacation, sunny"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="isPrivate" className="checkbox-label">
+              <input
+                id="isPrivate"
+                type="checkbox"
+                checked={isPrivate}
+                onChange={(e) => setIsPrivate(e.target.checked)}
+              />
+              <span>Make this outfit private? (Will not be shared publicly)</span>
+            </label>
+          </div>
+        </div>
 
-        <button type="submit" className="submitBtn">Submit</button>
+        <div className="form-section">
+          <h3>Select Items (Max 10)</h3>
+          {loadingItems && <p>Loading your items...</p>}
+          {itemsError && <p style={{ color: 'red' }}>{itemsError}</p>}
+          {!loadingItems && !itemsError && userItems.length === 0 && (
+            <p>You haven't added any clothing items yet! <a href="/AddItemPage">Add some now?</a></p>
+          )}
+          {!loadingItems && userItems.length > 0 && (
+            <div className="itemSelectionBox">
+              {userItems.map((item) => (
+                <div key={item.id} className="itemSelectItem">
+                  <input
+                    type="checkbox"
+                    id={`item-${item.id}`}
+                    checked={selectedItems.includes(item.id)}
+                    onChange={() => handleItemSelect(item.id)}
+                    disabled={
+                      selectedItems.length >= 10 &&
+                      !selectedItems.includes(item.id)
+                    }
+                  />
+                  <label htmlFor={`item-${item.id}`}>
+                    <img
+                      src={item.image_url || './assets/placeholder.png'}
+                      alt={item.name || 'Clothing item'}
+                      className="itemSelectImage"
+                    />
+                    <span>{item.name || 'Unnamed Item'}</span>
+                  </label>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="submitBtn"
+          disabled={selectedItems.length === 0 || loadingItems}
+        >
+          Create Outfit
+        </button>
       </form>
     </div>
   );
 };
-export default addOutfit;
+export default AddOutfitPage;

@@ -1,89 +1,75 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import "../stylesheets/home.css";
-import { getPublicOutfits } from '../client/api';
+import { getPublicOutfits } from "../client/api";
 
-
-// Change to API Fetch when available
-function PublicOutfits() {
-  const [publicOutfits] = useState([
-    {
-      id: 1,
-      title: "Casual Outfit",
-      description: "A casual outfit for everyday wear.",
-      tags: ["casual", "everyday"],
-      private: false,
-    },
-    {
-      id: 2,
-      title: "Formal Outfit",
-      description: "A formal outfit for special occasions.",
-      tags: ["formal", "special"],
-      private: true,
-    }
-  ]);
 
   // Fetching Public Outfits ////////////////////////////////////////////////////////
+function PublicOutfits() {
 
-    const [outfits, setOutfits] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+const [outfits, setOutfits] = useState([]);
+const [searchTerm, setSearchTerm] = useState("");
+const [error, setError] = useState(null); // Add error state
 
-    useEffect(() => {
-      const fetchPublicOutfits = async () => {
-        try {
-          const response = await getPublicOutfits();
-          console.log("Public outfits fetched:", response.data);
-        } catch (error) {
-          console.error("Error fetching public outfits:", error);
-        }
-      }
-      fetchPublicOutfits();
+useEffect(() => {
+  const fetchPublicOutfits = async () => {
+    setError(null); // Reset error
+    try {
+      const response = await getPublicOutfits();
+      console.log("Public outfits fetched:", response.data);
+      setOutfits(response.data || []); // Update state with fetched data
+    } catch (error) {
+      console.error("Error fetching public outfits:", error);
+      setError("Failed to load outfits."); // Set error message
+      setOutfits([]); // Clear outfits on error
     }
-    , []);
+  };
+  fetchPublicOutfits();
+}, []);
 
   // Handle Search ////////////////////////////////////////////////////////
 
   const filteredOutfits = useMemo(() => {
-    if(!searchTerm) {
+    if (!searchTerm) {
       return outfits;
     }
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+    // Might have to adjust based on how we input the tags
     return outfits.filter(outfit => {
       const nameMatch = outfit.name?.toLowerCase().includes(lowerCaseSearchTerm);
       const descriptionMatch = outfit.description?.toLowerCase().includes(lowerCaseSearchTerm);
-      const tagsMatch = outfit.tags?.some(tag => tag.toLowerCase().includes(lowerCaseSearchTerm));
-      return nameMatch || descriptionMatch || tagsMatch;
+      const tagsMatch = outfit.tags?.some(tag => typeof tag === 'string' ? tag.toLowerCase().includes(lowerCaseSearchTerm) : tag.name?.toLowerCase().includes(lowerCaseSearchTerm));
+      return nameMatch || descriptionMatch || tagsMatch; 
     });
   }, [outfits, searchTerm]);
 
 
 
   return (
-      <div className="publicBox">
-        {/* Change logic to refer to api call istead of table */}
-
-        <input
-          type="text"
-          placeholder="Search outfits by name, description, or tags..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="searchBar"
-        />
-        <div className="publicOutfitPreview">
-        {publicOutfits.map((outfit) => (
-          <div className="publicOutfitList" key={ outfit.id }>
-            <Link to={`/outfit/${outfit.id}`}> 
-            {/* Change to filteredOutfits.id after API */}
-            <h2>{outfit.title}</h2>
-            <p>{outfit.description}</p>
-            <p>Tags: {outfit.tags.join(", ")}</p>
-            <p>Private: {outfit.private ? "Yes" : "No"}</p>
-            </Link>
-          </div>
-          
-        ))}
-        </div>
+    <div className="publicBox">
+      <input
+        type="text"
+        placeholder="Search outfits by name or description..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="searchBar"
+      />
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div className="publicOutfitPreview">
+        {filteredOutfits.length > 0 ? (
+          filteredOutfits.map((outfit) => (
+            <div className="publicOutfitList" key={outfit.id}>
+              <Link to={`/outfit/${outfit.id}`}>
+                <h2>{outfit.name || "Untitled Outfit"}</h2> 
+              </Link>
+            </div>
+          ))
+        ) : (
+          !error && <p>No public outfits found.</p> // Show message if no outfits and no error
+        )}
       </div>
+    </div>
   );
 }
 export default PublicOutfits;

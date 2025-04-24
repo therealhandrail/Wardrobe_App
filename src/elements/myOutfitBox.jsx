@@ -1,91 +1,80 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
-import MyOutfitDetails from './MyOutfitDetails';
 import {
   getUserOutfits,
-  deleteOutfit,
-  getOutfitTags,
-  getOutfitClothing,
 } from "../client/api.js";
+import { useAuth } from "../client/authContext";
 import "../stylesheets/home.css";
 
-// Replace this with the actual API call to fetch user outfits
-
-function myOutfitBox() {
-  const [userOutfits] = useState([
-    {
-      id: 1,
-      title: "Casual Outfit",
-      description: "A casual outfit for everyday wear.",
-      tags: ["casual", "everyday"],
-      private: false,
-    },
-    {
-      id: 2,
-      title: "Formal Outfit",
-      description: "A formal outfit for special occasions.",
-      tags: ["formal", "special"],
-      private: true,
-    },
-  ]);
+function MyOutfitBox() {
+  const [outfits, setOutfits] = useState([]);
+  const [error, setError] = useState(null);
+  const { user, isAuthenticated } = useAuth();
 
   // Fetching User Outfits ////////////////////////////////////////////////////////
 
-  const [outfits, setOutfits] = useState([]);
-  const userId = 1; // Placeholder for user ID
-  // const { user } = //
-
   const fetchOutfits = useCallback(async () => {
-    if (!userId) {
-      console.error("User ID is not available.");
+    if (!user || !user.id) {
+      setOutfits([]);
       return;
     }
+    setError(null);
     try {
-      console.log(`Fetching outfits for ${userId}`); // change both to user.id when fetched
-      const response = await getUserOutfits(userId);
-      setOutfits(response.data);
+      console.log(`Fetching outfits for user ${user.id}`);
+      const response = await getUserOutfits(user.id);
+      setOutfits(response.data || []);
     } catch (error) {
       console.error("Error fetching user outfits:", error);
+      setError("Failed to load your outfits.");
+      setOutfits([]);
     }
-  }, [userId]); // change to "user" when fetched
+  }, [user]);
+
+// this is configured to only show user outfits if the user is authenticated
 
   useEffect(() => {
-    fetchOutfits();
-  }, [fetchOutfits]);
+    if (isAuthenticated) {
+      fetchOutfits();
+    } else {
+      setOutfits([]);
+    }
+  }, [fetchOutfits, isAuthenticated]);
 
 // I wanted to do edits, but I think I'd have to do all new edit pages for each of the items in the outfit
 // skipping the edit section for now, circle back if we have time
 
-  return (
-    <div className="myOutfitBox">
-      <input type="text" placeholder="Search..." className="searchBar" />
-      <div className="buttonBox">
-        <Link to="/AddOutfitPage">
-          <button>Add Outfit</button>
-        </Link>
-        <Link to="/AddItemPage">
-          <button>Add Item</button>
-        </Link>
-        <Link>
-          <button>Random Outfit</button>
-        </Link>
-      </div>
+return (
+  <div className="myOutfitBox">
+    <input type="text" placeholder="Search your outfits..." className="searchBar" />
+    <div className="buttonBox">
+      <Link to="/AddOutfitPage">
+        <button>Add Outfit</button>
+      </Link>
+      <Link to="/AddItemPage">
+        <button>Add Item</button>
+      </Link>
+    </div>
 
-      {/* Change logic to refer to api call istead of table */}
+    {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <div className="outfitPreview">
-        {userOutfits.map((outfit) => (
+    <div className="outfitPreview">
+      {outfits.length > 0 ? (
+        outfits.map((outfit) => (
           <div className="outfitList" key={outfit.id}>
             <Link to={`/outfit/${outfit.id}`}>
-              <h2>{outfit.title}</h2>
-              <p>{outfit.description}</p>
-              <p>Tags: {outfit.tags.join(", ")}</p>
-              <p>Private: {outfit.private ? "Yes" : "No"}</p>
+              <h2>{outfit.name || "Untitled Outfit"}</h2>
+              <p>{outfit.description || "No description."}</p>
             </Link>
           </div>
-        ))}
-      </div>
+        ))
+      ) : (
+        !error && isAuthenticated && <p>You haven't created any outfits yet.</p>
+      )}
+      {!isAuthenticated && <p>Please log in to see your outfits.</p>}
     </div>
-  );
+  </div>
+);
 }
-export default myOutfitBox;
+
+export default MyOutfitBox;
+
