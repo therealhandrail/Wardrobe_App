@@ -356,13 +356,18 @@ app.post('/api/clothing/:clothingId/clothingTags', isLoggedIn, async(req, res, n
 
 app.post('/api/outfits/:outfitId/outfitTags', isLoggedIn, async(req, res, next)=> {
   try {
-    if(req.body.user_id !== req.user.id){
+    const outfit = await fetchOutfit(req.params.outfitId);
+    if (!outfit) {
+      const error = Error('Outfit not found');
+      error.status = 404;
+      throw error;
+    }
+    if (outfit.user_id !== req.user.id) {
       const error = Error('not authorized');
       error.status = 401;
       throw error;
     }
-
-    res.status(201).send(await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.tag}));
+    res.status(201).send(await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.name}));
   }
   catch(ex){
     next(ex);

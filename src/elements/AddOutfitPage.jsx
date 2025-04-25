@@ -89,7 +89,7 @@ const AddOutfitPage = () => {
       console.log("New outfit created with ID:", newOutfitId);
 
       const addClothingPromises = selectedItems.map((itemId) =>
-        addClothingToOutfit(newOutfitId, itemId)
+        addClothingToOutfit(newOutfitId, itemId, user.id)
       );
       await Promise.all(addClothingPromises);
       console.log("Items added to outfit successfully.");
@@ -196,8 +196,9 @@ const AddOutfitPage = () => {
                   />
                   <label htmlFor={`item-${item.id}`}>
                     <img
-                      src={item.image_url || './assets/placeholder.png'}
+                      src={item.clothing_img_link || './assets/placeholder.png'}
                       alt={item.name || 'Clothing item'}
+                      style={{height: "10rem" }}
                       className="itemSelectImage"
                     />
                     <span>{item.name || 'Unnamed Item'}</span>
