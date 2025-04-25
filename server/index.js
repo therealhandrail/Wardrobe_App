@@ -201,6 +201,7 @@ app.get('/api/outfits/:outfitId/reviews/:reviewId', async(req, res, next)=> {
 });
 
 app.get('/api/outfits/:outfitId/reviews/:reviewId/comments', async(req, res, next)=> {
+  console.log(`GET /api/outfits/${req.params.outfitId}/reviews/${req.params.reviewId}/comments requested`);
   try {
     res.send(await fetchReviewComments({outfit_id: req.params.outfitId, review_id: req.params.reviewId}));
   }
@@ -210,6 +211,7 @@ app.get('/api/outfits/:outfitId/reviews/:reviewId/comments', async(req, res, nex
 });
 
 app.get('/api/outfits/:outfitId/reviews/:reviewId/comments/:commentId', async(req, res, next)=> {
+  console.log(`GET /api/outfits/${req.params.outfitId}/reviews/${req.params.reviewId}/comments/${req.params.commentId} requested`);
   try {
     res.send(await fetchReviewComment({id: req.params.commentId, outfit_id: req.params.outfitId, review_id: req.params.reviewId}));
   }
@@ -229,6 +231,7 @@ app.get('/api/reviews/me', isLoggedIn, async(req, res, next)=> {
 });
 
 app.get('/api/comments/me', isLoggedIn, async(req, res, next)=> {
+  console.log(`GET /api/comments/me requested by user ${req.user?.id}`);
   try {
     res.send(await fetchUserComments(req.user.id));
   }
@@ -239,6 +242,7 @@ app.get('/api/comments/me', isLoggedIn, async(req, res, next)=> {
 
 // Fetches info for admin users
 app.get('/api/users', isLoggedIn, async(req, res, next)=> {
+  console.log(`GET /api/users requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(!req.user.is_admin){
       const error = Error('not authorized');
@@ -253,6 +257,7 @@ app.get('/api/users', isLoggedIn, async(req, res, next)=> {
 });
 
 app.get('/api/users/:userId', isLoggedIn, async(req, res, next)=> {
+  console.log(`GET /api/users/${req.params.userId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(!req.user.is_admin){
       const error = Error('not authorized');
@@ -325,6 +330,8 @@ app.post('/api/outfits/:outfitId/reviews', isLoggedIn, async(req, res, next)=> {
 });
 
 app.post('/api/outfits/:outfitId/reviews/:reviewId/comments', isLoggedIn, async(req, res, next)=> {
+  console.log(`POST /api/outfits/${req.params.outfitId}/reviews/${req.params.reviewId}/comments requested by user ${req.user?.id}`);
+  console.log('Request body:', req.body);
   try {
     if(req.body.user_id !== req.user.id){
       const error = Error('not authorized');
@@ -356,38 +363,15 @@ app.post('/api/clothing/:clothingId/clothingTags', isLoggedIn, async(req, res, n
 
 app.post('/api/outfits/:outfitId/outfitTags', isLoggedIn, async(req, res, next)=> {
   try {
-    console.log(`--- Adding Tag ---`);
-    console.log(`Outfit ID Param: ${req.params.outfitId}`);
-    console.log(`Logged-in User ID: ${req.user?.id}`); // Use optional chaining just in case
-    console.log(`Request Body: ${JSON.stringify(req.body)}`);
-
-    const outfit = await fetchOutfit(req.params.outfitId);
-    console.log(`Fetched Outfit: ${JSON.stringify(outfit)}`);
-
-    if (!outfit) {
-      console.error('Outfit not found!');
-      const error = Error('Outfit not found');
-      error.status = 404;
-      throw error;
-    }
-
-    console.log(`Checking Auth: Outfit User ID (${outfit.user_id}) vs Logged-in User ID (${req.user?.id})`);
-    if (outfit.user_id !== req.user.id) {
-      console.error('Authorization check failed!');
+    if(req.body.user_id !== req.user.id){
       const error = Error('not authorized');
       error.status = 401;
       throw error;
     }
-
-    console.log('Authorization successful. Creating tag...');
-    // Ensure createOutfitTag expects { outfit_id, tag }
-    const newTag = await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.name});
-    console.log(`Tag created: ${JSON.stringify(newTag)}`);
-    res.status(201).send(newTag);
-
+    res.status(201).send(await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.tag}));
   }
   catch(ex){
-    console.error(`Error in POST /outfits/:outfitId/outfitTags: ${ex.message}`, ex);
+    console.error(`Error in POST /outfits/:outfitId/outfitTags: ${ex.message}`);
     next(ex);
   }
 });
@@ -437,6 +421,8 @@ app.put('/api/users/:userId/reviews/:reviewId', isLoggedIn, async(req, res, next
 });
 
 app.put('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, next)=> {
+  console.log(`PUT /api/users/${req.params.userId}/comments/${req.params.commentId} requested by user ${req.user?.id}`);
+  console.log('Request body:', req.body);
   try {
     if(req.params.userId !== req.user.id){
       const error = Error('not authorized');
@@ -453,6 +439,8 @@ app.put('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, ne
 // Deletes clothing and outfits
 
 app.delete('/api/clothing/:clothingId', isLoggedIn, async(req, res, next)=> {
+  console.log(`DELETE /api/clothing/${req.params.clothingId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
+  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -470,6 +458,8 @@ app.delete('/api/clothing/:clothingId', isLoggedIn, async(req, res, next)=> {
 });
 
 app.delete('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
+  console.log(`DELETE /api/outfits/${req.params.outfitId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
+  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -490,6 +480,8 @@ app.delete('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
 
 // Deletes Tags
 app.delete('/api/clothingTags/:clothingTagId', isLoggedIn, async(req, res, next)=> {
+  console.log(`DELETE /api/clothingTags/${req.params.clothingTagId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
+  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -505,6 +497,8 @@ app.delete('/api/clothingTags/:clothingTagId', isLoggedIn, async(req, res, next)
 });
 
 app.delete('/api/outfitTags/:outfitTagId', isLoggedIn, async(req, res, next)=> {
+  console.log(`DELETE /api/outfitTags/${req.params.outfitTagId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
+  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -522,6 +516,7 @@ app.delete('/api/outfitTags/:outfitTagId', isLoggedIn, async(req, res, next)=> {
 
 // Deletes Comments and Reviews
 app.delete('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, next)=> {
+  console.log(`DELETE /api/users/${req.params.userId}/comments/${req.params.commentId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(req.params.userId !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -537,6 +532,7 @@ app.delete('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res,
 });
 
 app.delete('/api/users/:userId/reviews/:reviewId', isLoggedIn, async(req, res, next)=> {
+  console.log(`DELETE /api/users/${req.params.userId}/reviews/${req.params.reviewId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(req.params.userId !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -553,7 +549,7 @@ app.delete('/api/users/:userId/reviews/:reviewId', isLoggedIn, async(req, res, n
 });
 
 app.use((err, req, res, next)=> {
-  console.log(err);
+  console.error('Error handler caught:', err); // Log the full error object
   res.status(err.status || 500).send({ error: err.message ? err.message : err });
 });
 
