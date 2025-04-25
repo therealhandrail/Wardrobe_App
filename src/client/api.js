@@ -46,8 +46,8 @@ export const updateOutfit = (outfitId, outfitData) =>
   apiClient.put(`/outfits/${outfitId}`, outfitData);
 export const deleteOutfit = (outfitId) =>
   apiClient.delete(`/outfits/${outfitId}`);
-export const addClothingToOutfit = (outfitId, clothingId) =>
-  apiClient.post(`/outfits/${outfitId}/clothing/${clothingId}`);
+export const addClothingToOutfit = (outfitId, clothingId, userId) =>
+  apiClient.post(`/outfits/${outfitId}/clothing/${clothingId}`, { user_id: userId });
 
 // Clothing (Items) //
 export const getClothingById = (clothingId) =>

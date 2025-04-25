@@ -1,15 +1,25 @@
 .addOutfitBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #895365;
+  padding: 2rem;
+}
 form.addOutfitForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-weight: 100;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2c262e;
+  padding: 2rem 3rem;
+  border-radius: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  font-weight: 100;
+  color: #eee;
+  width: 80%;
+  max-width: 800px;
+}
+.itemSelectItem input[type="checkbox"]:checked + label {
+  border: 2px solid #895365;
 }

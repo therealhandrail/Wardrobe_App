@@ -6,36 +6,34 @@ import { useAuth } from "../client/authContext";
 
 const AddItemPage = () => {
   const [itemName, setItemName] = useState("");
-  const [itemDescription, setItemDescription] = useState("");
-  const [itemTags, setItemTags] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [privateToggle, setPrivateToggle] = useState(false);
+  const [clothingType, setClothingType] = useState("");
+  const [storeLink, setStoreLink] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated) {
-        navigate('/login');
+        navigate("/login");
     }
 }, [isAuthenticated, navigate]);
-// redirect to login if not authenticated
 
 const handleSubmit = async (e) => {
   e.preventDefault();
   setError(null);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user?.id) {
       setError("You must be logged in to add items.");
       return;
   }
 
   const itemData = {
       name: itemName,
-      description: itemDescription,
-      tags: itemTags.split(",").map(tag => tag.trim()).filter(tag => tag !== ''),
-      image_url: imageUrl,
-      is_private: privateToggle,
+      user_id: user.id,
+      clothing_type: clothingType,
+      store_link: storeLink,
+      clothing_img_link: imageUrl
   };
   
   console.log("Submitting item data:", itemData);
@@ -46,7 +44,11 @@ const handleSubmit = async (e) => {
     navigate("/");
   } catch (err) {
     console.error("Error creating item:", err);
-    setError(err.response?.data?.message || "Failed to create item. Please try again.");
+    if (err.response) {
+        console.error("Backend Error Data:", err.response.data);
+    }
+    const backendError = err.response?.data?.error || err.response?.data?.message;
+    setError(backendError || "Failed to create item. Please try again.");
   }
 };
 
@@ -55,9 +57,9 @@ const handleSubmit = async (e) => {
       if (!imageUrl) return null;
       try {
           new URL(imageUrl);
-          return <img src={imageUrl} alt="Preview" className="image-preview" />;
+          return <img src={imageUrl} alt="Preview" className="image-preview" style={{height: "20rem" }}/>;
       } catch (_) {
-          return <p style={{color: 'red'}}>Invalid Image URL</p>;
+          return <p style={{color: "red"}}>Invalid Image URL</p>;
       }
   }
   
@@ -69,7 +71,8 @@ const handleSubmit = async (e) => {
     <div className="addItem">
         <form className="addItemForm" onSubmit={handleSubmit}>
             <h2>Add New Clothing Item</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            
             <label htmlFor="itemName">Item Name</label>
             <input 
                 id="itemName"
@@ -79,6 +82,17 @@ const handleSubmit = async (e) => {
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
             />
+
+            <label htmlFor="clothingType">Clothing Type</label>
+            <input 
+                id="clothingType"
+                type="text" 
+                placeholder="e.g., Shirt, Pants, Shoes" 
+                required 
+                value={clothingType}
+                onChange={(e) => setClothingType(e.target.value)}
+            />
+
             <label htmlFor="imageUrl">Image URL</label>
             <input
                 id="imageUrl"
@@ -89,31 +103,17 @@ const handleSubmit = async (e) => {
                 onChange={(e) => setImageUrl(e.target.value)}
             />
             {renderImagePreview()}
-            <label htmlFor="itemDescription">Description</label>
-            <textarea 
-                id="itemDescription"
-                placeholder="Enter item description (optional)" 
-                value={itemDescription}
-                onChange={(e) => setItemDescription(e.target.value)}
-            />
-            <label htmlFor="itemTags">Tags (comma-separated)</label>
+
+            <label htmlFor="storeLink">Store Link</label>
             <input 
-                id="itemTags"
-                type="text" 
-                placeholder="Enter tags, separated by commas (e.g., cotton, casual, blue)" 
-                value={itemTags}
-                onChange={(e) => setItemTags(e.target.value)}
+                id="storeLink"
+                type="url" 
+                placeholder="Link to where item can be bought (e.g., https://...)" 
+                required 
+                value={storeLink}
+                onChange={(e) => setStoreLink(e.target.value)}
             />
-            <label htmlFor="privateToggle" className="checkbox-label">
-                <input 
-                    id="privateToggle"
-                    type="checkbox" 
-                    name="privateToggle"
-                    checked={privateToggle}
-                    onChange={(e) => setPrivateToggle(e.target.checked)}
-                />
-                <span>Make this item private?</span>
-            </label>
+            
             <button type="submit">Add Item</button>
         </form>
     </div>
