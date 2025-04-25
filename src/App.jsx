@@ -6,6 +6,7 @@ import Login from "./Login";
 import Register from "./Register";
 import AddItemPage from "./elements/AddItemPage";
 import AddOutfitPage from "./elements/AddOutfitPage";
+import PublicOutfitDetails from "./elements/PublicOutfitDetails";
 import MyOutfitDetails from "./elements/MyOutfitDetails";
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
             <Route path="/Register" element={<Register />} />
             <Route path="/AddItemPage" element={<AddItemPage />} /> 
             <Route path="/AddOutfitPage" element={<AddOutfitPage />} />
-            <Route path="/outfit/:outfitId" element={<MyOutfitDetails />} /> 
+            <Route path="/outfit/:outfitId" element={<PublicOutfitDetails />} /> 
+            <Route path="/my-outfits/:outfitId" element={<MyOutfitDetails />} /> 
           </Routes>
         </div>
       </div>

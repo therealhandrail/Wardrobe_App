@@ -61,7 +61,7 @@ return (
       {outfits.length > 0 ? (
         outfits.map((outfit) => (
           <div className="outfitList" key={outfit.id}>
-            <Link to={`/outfit/${outfit.id}`}>
+<Link to={`/my-outfits/${outfit.id}`}>
               <h2>{outfit.name || "Untitled Outfit"}</h2>
               <p>{outfit.description || "No description."}</p>
             </Link>
