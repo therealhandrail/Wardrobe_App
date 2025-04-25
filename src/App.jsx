@@ -10,27 +10,26 @@ import PublicOutfitDetails from "./elements/PublicOutfitDetails";
 import MyOutfitDetails from "./elements/MyOutfitDetails";
 
 function App() {
+  // I moved the token state stuff from App, to authContext
+  // I wrapped the entire app in the AuthProvider component in main.jsx
+  // so that the token is available to all components
+  // we can use the token in any component that needs it, without having to pass it down as props
 
-// I moved the token state stuff from App, to authContext
-// I wrapped the entire app in the AuthProvider component in main.jsx
-// so that the token is available to all components
-// we can use the token in any component that needs it, without having to pass it down as props
-  
   return (
-      <div className="App">
-        <Navbar /> 
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/Login" element={<Login />} /> 
-            <Route path="/Register" element={<Register />} />
-            <Route path="/AddItemPage" element={<AddItemPage />} /> 
-            <Route path="/AddOutfitPage" element={<AddOutfitPage />} />
-            <Route path="/outfit/:outfitId" element={<PublicOutfitDetails />} /> 
-            <Route path="/my-outfits/:outfitId" element={<MyOutfitDetails />} /> 
-          </Routes>
-        </div>
+    <div className="App">
+      <Navbar />
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/AddItemPage" element={<AddItemPage />} />
+          <Route path="/AddOutfitPage" element={<AddOutfitPage />} />
+          <Route path="/outfit/:outfitId" element={<PublicOutfitDetails />} />
+          <Route path="/my-outfits/:outfitId" element={<MyOutfitDetails />} />
+        </Routes>
       </div>
+    </div>
   );
 }
 

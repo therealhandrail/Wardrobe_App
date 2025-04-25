@@ -3,29 +3,27 @@ import { useEffect, useState, useMemo } from "react";
 import "../stylesheets/home.css";
 import { getPublicOutfits } from "../client/api";
 
-
-  // Fetching Public Outfits ////////////////////////////////////////////////////////
+// Fetching Public Outfits ////////////////////////////////////////////////////////
 function PublicOutfits() {
+  const [outfits, setOutfits] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState(null);
 
-const [outfits, setOutfits] = useState([]);
-const [searchTerm, setSearchTerm] = useState("");
-const [error, setError] = useState(null); // Add error state
-
-useEffect(() => {
-  const fetchPublicOutfits = async () => {
-    setError(null); // Reset error
-    try {
-      const response = await getPublicOutfits();
-      console.log("Public outfits fetched:", response.data);
-      setOutfits(response.data || []); // Update state with fetched data
-    } catch (error) {
-      console.error("Error fetching public outfits:", error);
-      setError("Failed to load outfits."); // Set error message
-      setOutfits([]); // Clear outfits on error
-    }
-  };
-  fetchPublicOutfits();
-}, []);
+  useEffect(() => {
+    const fetchPublicOutfits = async () => {
+      setError(null);
+      try {
+        const response = await getPublicOutfits();
+        console.log("Public outfits fetched:", response.data);
+        setOutfits(response.data || []);
+      } catch (error) {
+        console.error("Error fetching public outfits:", error);
+        setError("Failed to load outfits.");
+        setOutfits([]);
+      }
+    };
+    fetchPublicOutfits();
+  }, []);
 
   // Handle Search ////////////////////////////////////////////////////////
 
@@ -36,15 +34,21 @@ useEffect(() => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
     // Might have to adjust based on how we input the tags
-    return outfits.filter(outfit => {
-      const nameMatch = outfit.name?.toLowerCase().includes(lowerCaseSearchTerm);
-      const descriptionMatch = outfit.description?.toLowerCase().includes(lowerCaseSearchTerm);
-      const tagsMatch = outfit.tags?.some(tag => typeof tag === 'string' ? tag.toLowerCase().includes(lowerCaseSearchTerm) : tag.name?.toLowerCase().includes(lowerCaseSearchTerm));
-      return nameMatch || descriptionMatch || tagsMatch; 
+    return outfits.filter((outfit) => {
+      const nameMatch = outfit.name
+        ?.toLowerCase()
+        .includes(lowerCaseSearchTerm);
+      const descriptionMatch = outfit.description
+        ?.toLowerCase()
+        .includes(lowerCaseSearchTerm);
+      const tagsMatch = outfit.tags?.some((tag) =>
+        typeof tag === "string"
+          ? tag.toLowerCase().includes(lowerCaseSearchTerm)
+          : tag.name?.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+      return nameMatch || descriptionMatch || tagsMatch;
     });
   }, [outfits, searchTerm]);
-
-
 
   return (
     <div className="publicBox">
@@ -55,22 +59,19 @@ useEffect(() => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="searchBar"
       />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <div className="publicOutfitPreview">
-        {filteredOutfits.length > 0 ? (
-          filteredOutfits.map((outfit) => (
-            <div className="publicOutfitList" key={outfit.id}>
-              <Link to={`/outfit/${outfit.id}`}>
-                <h2>{outfit.name || "Untitled Outfit"}</h2> 
-              </Link>
-            </div>
-          ))
-        ) : (
-          !error && <p>No public outfits found.</p> // Show message if no outfits and no error
-        )}
+        {filteredOutfits.length > 0
+          ? filteredOutfits.map((outfit) => (
+              <div className="publicOutfitList" key={outfit.id}>
+                <Link to={`/outfit/${outfit.id}`}>
+                  <h2>{outfit.name || "Untitled Outfit"}</h2>
+                </Link>
+              </div>
+            ))
+          : !error && <p>No public outfits found.</p>}
       </div>
     </div>
   );
 }
 export default PublicOutfits;
-

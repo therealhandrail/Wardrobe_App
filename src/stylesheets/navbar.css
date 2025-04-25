@@ -16,6 +16,7 @@
   box-shadow: 0 0 5px black;
   top: 0;
   overflow: hidden;
+  position: sticky;
 }
 .logo {
   display: flex;

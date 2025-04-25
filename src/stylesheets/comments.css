@@ -1,0 +1,75 @@
+/* Styles for CommentBox component */
+
+.comment-box-container {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  color: #ffffe8;
+}
+
+.comment-box-container h3 {
+  margin: 0 0 15px 0;
+}
+
+.comment-box-container .error-message {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+
+.comments-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.comment-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+  margin-bottom: 5px;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  resize: vertical;
+  box-sizing: border-box;
+  font-size: 1em;
+  outline: none;
+}
+
+.comment-form button {
+  padding: 10px 15px;
+  background-color: #895365;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.comment-form button:hover:not(:disabled) {
+  background-color: #f8b17f;
+}
+
+.comment-form button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

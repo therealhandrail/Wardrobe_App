@@ -24,7 +24,7 @@ const AddOutfitPage = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [isAuthenticated, navigate]);
 
@@ -70,7 +70,9 @@ const AddOutfitPage = () => {
       return;
     }
     if (selectedItems.length === 0) {
-      setSubmitError("Please select at least one clothing item for the outfit.");
+      setSubmitError(
+        "Please select at least one clothing item for the outfit."
+      );
       return;
     }
 
@@ -78,7 +80,7 @@ const AddOutfitPage = () => {
       name: name,
       user_id: user.id,
       previously_worn: false,
-      share_publicly: !isPrivate
+      share_publicly: !isPrivate,
     };
 
     console.log("Submitting outfit data:", outfitData);
@@ -113,15 +115,17 @@ const AddOutfitPage = () => {
       setTags("");
       setIsPrivate(false);
       setSelectedItems([]);
-      
-      navigate(`/outfit/${newOutfitId}`);
 
+      navigate(`/outfit/${newOutfitId}`);
     } catch (error) {
       console.error("Error creating outfit:", error);
       if (error.response) {
-        console.error('Error response data:', error.response.data);
+        console.error("Error response data:", error.response.data);
       }
-      setSubmitError(error.response?.data?.message || "Error creating outfit. Please try again.");
+      setSubmitError(
+        error.response?.data?.message ||
+          "Error creating outfit. Please try again."
+      );
     }
   };
 
@@ -133,9 +137,9 @@ const AddOutfitPage = () => {
   return (
     <div className="addOutfitBox">
       <h2>Create New Outfit</h2>
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
-      
+      {success && <p style={{ color: "green" }}>{success}</p>}
+      {submitError && <p style={{ color: "red" }}>{submitError}</p>}
+
       <form className="addOutfitForm" onSubmit={handleSubmit}>
         <div className="form-section">
           <h3>Details</h3>
@@ -168,7 +172,9 @@ const AddOutfitPage = () => {
                 checked={isPrivate}
                 onChange={(e) => setIsPrivate(e.target.checked)}
               />
-              <span>Make this outfit private? (Will not be shared publicly)</span>
+              <span>
+                Make this outfit private? (Will not be shared publicly)
+              </span>
             </label>
           </div>
         </div>
@@ -176,9 +182,12 @@ const AddOutfitPage = () => {
         <div className="form-section">
           <h3>Select Items (Max 10)</h3>
           {loadingItems && <p>Loading your items...</p>}
-          {itemsError && <p style={{ color: 'red' }}>{itemsError}</p>}
+          {itemsError && <p style={{ color: "red" }}>{itemsError}</p>}
           {!loadingItems && !itemsError && userItems.length === 0 && (
-            <p>You haven't added any clothing items yet! <a href="/AddItemPage">Add some now?</a></p>
+            <p>
+              You haven't added any clothing items yet!{" "}
+              <a href="/AddItemPage">Add some now?</a>
+            </p>
           )}
           {!loadingItems && userItems.length > 0 && (
             <div className="itemSelectionBox">
@@ -196,12 +205,12 @@ const AddOutfitPage = () => {
                   />
                   <label htmlFor={`item-${item.id}`}>
                     <img
-                      src={item.clothing_img_link || './assets/placeholder.png'}
-                      alt={item.name || 'Clothing item'}
-                      style={{height: "10rem" }}
+                      src={item.clothing_img_link || "./assets/placeholder.png"}
+                      alt={item.name || "Clothing item"}
+                      style={{ height: "10rem" }}
                       className="itemSelectImage"
                     />
-                    <span>{item.name || 'Unnamed Item'}</span>
+                    <span>{item.name || "Unnamed Item"}</span>
                   </label>
                 </div>
               ))}

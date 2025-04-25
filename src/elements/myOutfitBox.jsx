@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
-import {
-  getUserOutfits,
-} from "../client/api.js";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { getUserOutfits } from "../client/api.js";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/home.css";
 
@@ -10,6 +8,7 @@ function MyOutfitBox() {
   const [outfits, setOutfits] = useState([]);
   const [error, setError] = useState(null);
   const { user, isAuthenticated } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetching User Outfits ////////////////////////////////////////////////////////
 
@@ -30,7 +29,7 @@ function MyOutfitBox() {
     }
   }, [user]);
 
-// this is configured to only show user outfits if the user is authenticated
+  // this is configured to only show user outfits if the user is authenticated
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -40,41 +39,74 @@ function MyOutfitBox() {
     }
   }, [fetchOutfits, isAuthenticated]);
 
-// I wanted to do edits, but I think I'd have to do all new edit pages for each of the items in the outfit
-// skipping the edit section for now, circle back if we have time
+  // Filter outfits based on search term ////////////////////////////////////////
+  const filteredOutfits = useMemo(() => {
+    if (!searchTerm) {
+      return outfits;
+    }
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
-return (
-  <div className="myOutfitBox">
-    <input type="text" placeholder="Search your outfits..." className="searchBar" />
-    <div className="buttonBox">
-      <Link to="/AddOutfitPage">
-        <button>Add Outfit</button>
-      </Link>
-      <Link to="/AddItemPage">
-        <button>Add Item</button>
-      </Link>
+    return outfits.filter((outfit) => {
+      const nameMatch = outfit.name
+        ?.toLowerCase()
+        .includes(lowerCaseSearchTerm);
+      const descriptionMatch = outfit.description
+        ?.toLowerCase()
+        .includes(lowerCaseSearchTerm);
+      // The tags need some work. They dont accept spaces so I need to adjust 
+      const tagsMatch = outfit.tags?.some((tag) =>
+        typeof tag === "string"
+          ? tag.toLowerCase().includes(lowerCaseSearchTerm)
+          : tag.name?.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+      return nameMatch || descriptionMatch || tagsMatch;
+    });
+  }, [outfits, searchTerm]);
+
+  // I wanted to do edits, but I think I'd have to do all new edit pages for each of the items in the outfit
+  // skipping the edit section for now, circle back if we have time
+
+  return (
+    <div className="myOutfitBox">
+      <input
+        type="text"
+        placeholder="Search your outfits..."
+        className="searchBar"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <div className="buttonBox">
+        <Link to="/AddOutfitPage">
+          <button>Add Outfit</button>
+        </Link>
+        <Link to="/AddItemPage">
+          <button>Add Item</button>
+        </Link>
+      </div>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div className="outfitPreview">
+        {filteredOutfits.length > 0
+          ? filteredOutfits.map((outfit) => (
+              <div className="outfitList" key={outfit.id}>
+                <Link to={`/my-outfits/${outfit.id}`}>
+                  <h2>{outfit.name || "Untitled Outfit"}</h2>
+                  <p>{outfit.description || "No description."}</p>
+                </Link>
+              </div>
+            ))
+          : !error &&
+            isAuthenticated &&
+            !searchTerm && <p>You haven't created any outfits yet.</p>}
+        {!error &&
+          isAuthenticated &&
+          searchTerm &&
+          filteredOutfits.length === 0 && <p>No outfits match your search.</p>}
+        {!isAuthenticated && <p>Please log in to see your outfits.</p>}
+      </div>
     </div>
-
-    {error && <p style={{ color: 'red' }}>{error}</p>}
-
-    <div className="outfitPreview">
-      {outfits.length > 0 ? (
-        outfits.map((outfit) => (
-          <div className="outfitList" key={outfit.id}>
-<Link to={`/my-outfits/${outfit.id}`}>
-              <h2>{outfit.name || "Untitled Outfit"}</h2>
-              <p>{outfit.description || "No description."}</p>
-            </Link>
-          </div>
-        ))
-      ) : (
-        !error && isAuthenticated && <p>You haven't created any outfits yet.</p>
-      )}
-      {!isAuthenticated && <p>Please log in to see your outfits.</p>}
-    </div>
-  </div>
-);
+  );
 }
 
 export default MyOutfitBox;
-

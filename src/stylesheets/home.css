@@ -5,12 +5,14 @@
   height: 100vh;
   width: 100vw;
   margin: 0;
+  overflow-y: scroll;
 }
 
 .leftBox {
   background-color: #895365;
   width: 30%;
   box-shadow: 0 0 5px black;
+  /* overflow-y: scroll; */
 }
 
 .rightBox {
@@ -68,13 +70,13 @@ button {
   cursor: pointer;
   font-weight: thin;
   font-size: 1rem;
+  transition: background-color 0.2s ease;
 }
 button:hover {
   background-color: #f8b17f;
 }
 
-@media only screen and (max-width: 1800px){
-
+@media only screen and (max-width: 1800px) {
   .buttonBox {
     flex-direction: column;
     align-items: center;
@@ -85,7 +87,7 @@ button:hover {
 
 /* My Outfits Box - preview */
 
-.outfitPreview{
+.outfitPreview {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -98,22 +100,22 @@ button:hover {
   color: #ffffe8;
 }
 
-.outfitList{
+.outfitList {
   display: flex;
   flex-direction: row;
   width: 80%;
   margin: 0.5rem;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
-.outfitList:hover{
+.outfitList:hover {
   background-color: #a17282;
   border-radius: 0.4rem;
 }
 
 /* Public Outfits */
 
-.publicOutfitPreview{
+.publicOutfitPreview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
@@ -125,7 +127,7 @@ button:hover {
   color: #2c262e;
 }
 
-.publicOutfitList{
+.publicOutfitList {
   min-height: 150px;
   margin: 0;
   padding: 1rem;
@@ -138,11 +140,11 @@ button:hover {
   align-items: center;
 }
 
-.publicOutfitList:hover{
+.publicOutfitList:hover {
   background-color: rgba(0, 0, 0, 0.021);
 }
 
-.publicBox{
+.publicBox {
   display: flex;
   flex-direction: column;
   justify-content: center;
