@@ -356,20 +356,38 @@ app.post('/api/clothing/:clothingId/clothingTags', isLoggedIn, async(req, res, n
 
 app.post('/api/outfits/:outfitId/outfitTags', isLoggedIn, async(req, res, next)=> {
   try {
+    console.log(`--- Adding Tag ---`);
+    console.log(`Outfit ID Param: ${req.params.outfitId}`);
+    console.log(`Logged-in User ID: ${req.user?.id}`); // Use optional chaining just in case
+    console.log(`Request Body: ${JSON.stringify(req.body)}`);
+
     const outfit = await fetchOutfit(req.params.outfitId);
+    console.log(`Fetched Outfit: ${JSON.stringify(outfit)}`);
+
     if (!outfit) {
+      console.error('Outfit not found!');
       const error = Error('Outfit not found');
       error.status = 404;
       throw error;
     }
+
+    console.log(`Checking Auth: Outfit User ID (${outfit.user_id}) vs Logged-in User ID (${req.user?.id})`);
     if (outfit.user_id !== req.user.id) {
+      console.error('Authorization check failed!');
       const error = Error('not authorized');
       error.status = 401;
       throw error;
     }
-    res.status(201).send(await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.name}));
+
+    console.log('Authorization successful. Creating tag...');
+    // Ensure createOutfitTag expects { outfit_id, tag }
+    const newTag = await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.name});
+    console.log(`Tag created: ${JSON.stringify(newTag)}`);
+    res.status(201).send(newTag);
+
   }
   catch(ex){
+    console.error(`Error in POST /outfits/:outfitId/outfitTags: ${ex.message}`, ex);
     next(ex);
   }
 });
