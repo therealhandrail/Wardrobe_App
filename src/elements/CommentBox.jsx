@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getReviewComments, createComment } from "../client/api";
+import { getOutfitComments, createComment } from "../client/api";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/comments.css";
 
-function CommentBox({ outfitId, reviewId }) {
+function CommentBox({ outfitId, commentId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState(null);
@@ -11,8 +11,8 @@ function CommentBox({ outfitId, reviewId }) {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!outfitId || !reviewId) {
-      setError("Outfit ID and Review ID are required.");
+    if (!outfitId || !commentId) {
+      setError("Outfit ID and Comment ID are required.");
       return;
     }
 
@@ -20,7 +20,7 @@ function CommentBox({ outfitId, reviewId }) {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await getReviewComments(outfitId, reviewId);
+        const response = await getOutfitComments(outfitId, commentId);
         setComments(response.data || []);
       } catch (err) {
         console.error("Failed to fetch comments:", err);
@@ -32,7 +32,7 @@ function CommentBox({ outfitId, reviewId }) {
     };
 
     fetchComments();
-  }, [outfitId, reviewId]);
+  }, [outfitId, commentId]);
 
   const handleInputChange = (event) => {
     setNewComment(event.target.value);
@@ -44,8 +44,8 @@ function CommentBox({ outfitId, reviewId }) {
       setError("Comment cannot be empty.");
       return;
     }
-    if (!outfitId || !reviewId) {
-      setError("Cannot post comment without Outfit ID and Review ID.");
+    if (!outfitId || !commentId) {
+      setError("Cannot post comment without Outfit ID and Comment ID.");
       return;
     }
 
@@ -63,7 +63,7 @@ function CommentBox({ outfitId, reviewId }) {
     };
 
     try {
-      const response = await createComment(outfitId, reviewId, commentData);
+      const response = await createComment(outfitId, commentId, commentData);
       setComments((prevComments) => [...prevComments, response.data]);
       setNewComment("");
     } catch (err) {

@@ -4,7 +4,7 @@ import {
   getOutfitById,
   getOutfitClothing,
   getClothingById,
-  getOutfitReviews,
+  getOutfitComments,
 } from "../client/api";
 import CommentBox from "./CommentBox";
 import "../stylesheets/outfitDetails.css";
@@ -13,7 +13,7 @@ function PublicOutfitDetails() {
   const { outfitId } = useParams();
   const [outfit, setOutfit] = useState(null);
   const [clothingItems, setClothingItems] = useState([]);
-  const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -59,24 +59,24 @@ function PublicOutfitDetails() {
           }
 
           try {
-            const reviewsResponse = await getOutfitReviews(outfitId);
-            setReviews(reviewsResponse.data || []);
-          } catch (reviewsError) {
-            console.error("Failed to fetch reviews:", reviewsError);
-            setReviews([]);
+            const commentsResponse = await getOutfitComments(outfitId);
+            setComments(commentsResponse.data || []);
+          } catch (commentsError) {
+            console.error("Failed to fetch comments:", commentsError);
+            setComments([]);
           }
         } else {
           setError("Outfit not found.");
           setOutfit(null);
           setClothingItems([]);
-          setReviews([]);
+          setComments([]);
         }
       } catch (err) {
         console.error("Failed to fetch outfit data:", err);
         setError("Failed to load outfit details. Please try again later.");
         setOutfit(null);
         setClothingItems([]);
-        setReviews([]);
+        setComments([]);
       } finally {
         setIsLoading(false);
       }
@@ -146,10 +146,10 @@ function PublicOutfitDetails() {
 
         <div className="outfitCommentsSection">
           <h2>Comments</h2>
-          {reviews.length > 0 ? (
+          {comments.length > 0 ? (
             <CommentBox
               outfitId={outfitId}
-              reviewId={reviews[0].id || reviews[0]._id}
+              commentId={comments[0].id || comments[0]._id}
             />
           ) : (
             <p>No comments yet!</p>

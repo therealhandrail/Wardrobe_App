@@ -5,7 +5,6 @@ const {
   createOutfitClothes,
   createClothingTag,
   createOutfitTag,
-  createReview,
   createComment
 } = require('./db');
 
@@ -94,29 +93,19 @@ const seedDatabases = async() => {
     //createOutfitTag({outfit_id: currentOutfits[].id, tag: ''}),
   ]);
 
-  const currentReviews = await Promise.all([
-    createReview({user_id: currentUsers[3].id, outfit_id: currentOutfits[0].id, written_rating: 'So Cute!'}),
-    createReview({user_id: currentUsers[4].id, outfit_id: currentOutfits[0].id, written_rating: 'That\'s my favorite color'}),
-    createReview({user_id: currentUsers[5].id, outfit_id: currentOutfits[0].id, written_rating: 'Perfect for a picnic!'}),
-    createReview({user_id: currentUsers[2].id, outfit_id: currentOutfits[1].id, written_rating: 'Was this comfortable to run in?'}),
-    createReview({user_id: currentUsers[5].id, outfit_id: currentOutfits[1].id, written_rating: 'I love this shade of green <3'}),
-    createReview({user_id: currentUsers[3].id, outfit_id: currentOutfits[1].id, written_rating: 'Cool'}),
-    createReview({user_id: currentUsers[1].id, outfit_id: currentOutfits[2].id, written_rating: 'Do those Boots last a while?'}),
-    createReview({user_id: currentUsers[3].id, outfit_id: currentOutfits[2].id, written_rating: 'I love those jeans!'}),
-    createReview({user_id: currentUsers[2].id, outfit_id: currentOutfits[2].id, written_rating: 'Nice dude'}),
-    createReview({user_id: currentUsers[1].id, outfit_id: currentOutfits[3].id, written_rating: 'Go Bills!'}),
-    //createReview({user_id: currentUsers[].id, outfit_id: currentOutfits[].id, written_rating: ''}),
-  ]);
-
   const currentComments = await Promise.all([
-    createComment({ review_id: currentReviews[3].id, user_id: currentUsers[1].id, outfit_id: currentOutfits[1].id, comment: 'Yes I run in this frequently.' }),
-    createComment({ review_id: currentReviews[3].id, user_id: currentUsers[2].id, outfit_id: currentOutfits[1].id, comment: 'Good to know.  I think I might buy this for my friend.' }),
-    createComment({ review_id: currentReviews[6].id, user_id: currentUsers[4].id, outfit_id: currentOutfits[2].id, comment: 'I\'ve had mine for 2 years and they\'re in good shape.' }),
-    createComment({ review_id: currentReviews[6].id, user_id: currentUsers[1].id, outfit_id: currentOutfits[2].id, comment: 'Ok great, I think I will pick up a pair.' }),
-    createComment({ review_id: currentReviews[9].id, user_id: currentUsers[1].id, outfit_id: currentOutfits[3].id, comment: 'go bills!' }),
-    //createComment({ review_id: currentReviews[].id, user_id: currentUsers[].id, outfit_id: currentOutfits[].id, comment: '' }),
+    createComment({user_id: currentUsers[3].id, outfit_id: currentOutfits[0].id, written_rating: 'So Cute!'}),
+    createComment({user_id: currentUsers[4].id, outfit_id: currentOutfits[0].id, written_rating: 'That\'s my favorite color'}),
+    createComment({user_id: currentUsers[5].id, outfit_id: currentOutfits[0].id, written_rating: 'Perfect for a picnic!'}),
+    createComment({user_id: currentUsers[2].id, outfit_id: currentOutfits[1].id, written_rating: 'Was this comfortable to run in?'}),
+    createComment({user_id: currentUsers[5].id, outfit_id: currentOutfits[1].id, written_rating: 'I love this shade of green <3'}),
+    createComment({user_id: currentUsers[3].id, outfit_id: currentOutfits[1].id, written_rating: 'Cool'}),
+    createComment({user_id: currentUsers[1].id, outfit_id: currentOutfits[2].id, written_rating: 'Great boots! I know those will last a while.'}),
+    createComment({user_id: currentUsers[3].id, outfit_id: currentOutfits[2].id, written_rating: 'I love those jeans!'}),
+    createComment({user_id: currentUsers[2].id, outfit_id: currentOutfits[2].id, written_rating: 'Nice dude'}),
+    createComment({user_id: currentUsers[1].id, outfit_id: currentOutfits[3].id, written_rating: 'Go Bills!'}),
+    //createComment({user_id: currentUsers[].id, outfit_id: currentOutfits[].id, written_rating: ''}),
   ]);
+
 }
-
-
 module.exports = {seedDatabases};

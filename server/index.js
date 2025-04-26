@@ -7,7 +7,6 @@ const {
   createOutfitClothes,
   createClothingTag,
   createOutfitTag,
-  createReview,
   createComment,
   authenticate,
   findUserWithToken,
@@ -21,15 +20,10 @@ const {
   fetchOutfitClothes,
   fetchClothingTags,
   fetchOutfitTags,
-  fetchOutfitReviews,
-  fetchOutfitReview,
-  fetchUserReviews,
-  fetchReviewComments,
-  fetchReviewComment,
-  fetchUserComments,
+  fetchOutfitComments,
+  fetchOutfitComment,
   updateClothing,
   updateOutfit,
-  updateReview,
   updateComment,
   deleteClothing,
   deleteOutfit,
@@ -39,10 +33,7 @@ const {
   deleteClothingTags,
   deleteOutfitTag,
   deleteOutfitTags,
-  deleteReviews,
-  deleteReview,
-  deleteCommentsByOutfit,
-  deleteCommentsByReview,
+  deleteComments,
   deleteComment
 } = require('./db');
 const express = require('express');
@@ -59,22 +50,11 @@ app.use(cors());
 
 // Necessary functions/routes to access your account and access your account info
 const isLoggedIn = async(req, res, next)=> {
-  console.log('isLoggedIn middleware triggered.');
-  console.log('Authorization Header Received:', req.headers.authorization);
   try {
-    //
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new Error('Authorization header missing or invalid');
-    }
-    const token = authHeader.split(' ')[1]; // Extract token
-    req.user = await findUserWithToken(token); // Pass only the token
-    console.log('Token verified, user attached:', req.user?.id);
+    req.user = await findUserWithToken(req.headers.authorization);
     next();
-    //
   }
   catch(ex){
-    console.error('Error in isLoggedIn middleware:', ex.message);
     next(ex);
   }
 };
@@ -181,68 +161,38 @@ app.get('/api/outfits/:outfitId/outfitTags', async(req, res, next)=> {
   }
 });
 
-// Fetches reviews and comments
-app.get('/api/outfits/:outfitId/reviews', async(req, res, next)=> {
+// Fetches comments and
+app.get('/api/outfits/:outfitId/comments', async(req, res, next)=> {
   try {
-    res.send(await fetchOutfitReviews(req.params.outfitId));
+    res.send(await fetchOutfitComments(req.params.outfitId));
   }
   catch(ex){
     next(ex);
   }
 });
 
-app.get('/api/outfits/:outfitId/reviews/:reviewId', async(req, res, next)=> {
+app.get('/api/outfits/:outfitId/comments/:commentId', async(req, res, next)=> {
   try {
-    res.send(await fetchOutfitReview({id: req.params.reviewId, outfit_id: req.params.outfitId}));
+    res.send(await fetchOutfitComment({id: req.params.commentId, outfit_id: req.params.outfitId}));
   }
   catch(ex){
     next(ex);
   }
 });
 
-app.get('/api/outfits/:outfitId/reviews/:reviewId/comments', async(req, res, next)=> {
-  console.log(`GET /api/outfits/${req.params.outfitId}/reviews/${req.params.reviewId}/comments requested`);
-  try {
-    res.send(await fetchReviewComments({outfit_id: req.params.outfitId, review_id: req.params.reviewId}));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
-app.get('/api/outfits/:outfitId/reviews/:reviewId/comments/:commentId', async(req, res, next)=> {
-  console.log(`GET /api/outfits/${req.params.outfitId}/reviews/${req.params.reviewId}/comments/${req.params.commentId} requested`);
-  try {
-    res.send(await fetchReviewComment({id: req.params.commentId, outfit_id: req.params.outfitId, review_id: req.params.reviewId}));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
-// Fetches user reviews and comments
-app.get('/api/reviews/me', isLoggedIn, async(req, res, next)=> {
-  try {
-    res.send(await fetchUserReviews(req.user.id));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
-app.get('/api/comments/me', isLoggedIn, async(req, res, next)=> {
-  console.log(`GET /api/comments/me requested by user ${req.user?.id}`);
-  try {
-    res.send(await fetchUserComments(req.user.id));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
+// Unused
+// Fetches user comments
+// app.get('/api/comments/me', isLoggedIn, async(req, res, next)=> {
+//   try {
+//     res.send(await fetchUserComments(req.user.id));
+//   }
+//   catch(ex){
+//     next(ex);
+//   }
+// });
 
 // Fetches info for admin users
 app.get('/api/users', isLoggedIn, async(req, res, next)=> {
-  console.log(`GET /api/users requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(!req.user.is_admin){
       const error = Error('not authorized');
@@ -257,7 +207,6 @@ app.get('/api/users', isLoggedIn, async(req, res, next)=> {
 });
 
 app.get('/api/users/:userId', isLoggedIn, async(req, res, next)=> {
-  console.log(`GET /api/users/${req.params.userId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(!req.user.is_admin){
       const error = Error('not authorized');
@@ -314,31 +263,15 @@ app.post('/api/outfits/:outfitId/clothing/:clothingId', isLoggedIn, async(req, r
   }
 });
 
-// Create Review and outfit statements
-app.post('/api/outfits/:outfitId/reviews', isLoggedIn, async(req, res, next)=> {
+// Create Comment and outfit statements
+app.post('/api/outfits/:outfitId/comments', isLoggedIn, async(req, res, next)=> {
   try {
     if(req.body.user_id !== req.user.id){
       const error = Error('not authorized');
       error.status = 401;
       throw error;
     }
-    res.status(201).send(await createReview({ user_id: req.body.user_id, outfit_id: req.params.outfitId, written_rating: req.body.written_rating }));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
-app.post('/api/outfits/:outfitId/reviews/:reviewId/comments', isLoggedIn, async(req, res, next)=> {
-  console.log(`POST /api/outfits/${req.params.outfitId}/reviews/${req.params.reviewId}/comments requested by user ${req.user?.id}`);
-  console.log('Request body:', req.body);
-  try {
-    if(req.body.user_id !== req.user.id){
-      const error = Error('not authorized');
-      error.status = 401;
-      throw error;
-    }
-    res.status(201).send(await createComment({ review_id: req.params.reviewId, user_id: req.body.user_id, outfit_id: req.params.outfitId, comment: req.body.comment }));
+    res.status(201).send(await createComment({ user_id: req.body.user_id, outfit_id: req.params.outfitId, written_rating: req.body.written_rating }));
   }
   catch(ex){
     next(ex);
@@ -368,10 +301,10 @@ app.post('/api/outfits/:outfitId/outfitTags', isLoggedIn, async(req, res, next)=
       error.status = 401;
       throw error;
     }
+
     res.status(201).send(await createOutfitTag({outfit_id: req.params.outfitId, tag: req.body.tag}));
   }
   catch(ex){
-    console.error(`Error in POST /outfits/:outfitId/outfitTags: ${ex.message}`);
     next(ex);
   }
 });
@@ -405,31 +338,15 @@ app.put('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
   }
 });
 
-// Update reviews and comments
-app.put('/api/users/:userId/reviews/:reviewId', isLoggedIn, async(req, res, next)=> {
-  try {
-    if(req.params.userId !== req.user.id){
-      const error = Error('not authorized');
-      error.status = 401;
-      throw error;
-    }
-    res.send(await updateReview({ written_rating: req.body.written_rating, id: req.params.reviewId, user_id: req.params.userId }));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
+// Update comments
 app.put('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, next)=> {
-  console.log(`PUT /api/users/${req.params.userId}/comments/${req.params.commentId} requested by user ${req.user?.id}`);
-  console.log('Request body:', req.body);
   try {
     if(req.params.userId !== req.user.id){
       const error = Error('not authorized');
       error.status = 401;
       throw error;
     }
-    res.send(await updateComment({ comment: req.body.comment, id: req.params.commentId, user_id: req.params.userId }));
+    res.send(await updateComment({ written_rating: req.body.written_rating, id: req.params.commentId, user_id: req.params.userId }));
   }
   catch(ex){
     next(ex);
@@ -439,8 +356,6 @@ app.put('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, ne
 // Deletes clothing and outfits
 
 app.delete('/api/clothing/:clothingId', isLoggedIn, async(req, res, next)=> {
-  console.log(`DELETE /api/clothing/${req.params.clothingId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
-  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -458,8 +373,6 @@ app.delete('/api/clothing/:clothingId', isLoggedIn, async(req, res, next)=> {
 });
 
 app.delete('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
-  console.log(`DELETE /api/outfits/${req.params.outfitId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
-  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -468,8 +381,7 @@ app.delete('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
     }
     await deleteOutfitClothesbyOutfit(req.params.outfitId);
     await deleteOutfitTags(req.params.outfitId);
-    await deleteCommentsByOutfit(req.params.outfitId);
-    await deleteReviews(req.params.outfitId);
+    await deleteComments(req.params.outfitId);
     await deleteOutfit(req.params.outfitId);
     res.sendStatus(204);
   }
@@ -480,8 +392,6 @@ app.delete('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
 
 // Deletes Tags
 app.delete('/api/clothingTags/:clothingTagId', isLoggedIn, async(req, res, next)=> {
-  console.log(`DELETE /api/clothingTags/${req.params.clothingTagId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
-  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -497,8 +407,6 @@ app.delete('/api/clothingTags/:clothingTagId', isLoggedIn, async(req, res, next)
 });
 
 app.delete('/api/outfitTags/:outfitTagId', isLoggedIn, async(req, res, next)=> {
-  console.log(`DELETE /api/outfitTags/${req.params.outfitTagId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
-  console.log('Request body (for user ID check):', req.body);
   try {
     if(req.body.user_id !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -514,9 +422,9 @@ app.delete('/api/outfitTags/:outfitTagId', isLoggedIn, async(req, res, next)=> {
 });
 
 
-// Deletes Comments and Reviews
+// Deletes Comments
+
 app.delete('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, next)=> {
-  console.log(`DELETE /api/users/${req.params.userId}/comments/${req.params.commentId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
   try {
     if(req.params.userId !== req.user.id && !req.user.is_admin){
       const error = Error('not authorized');
@@ -531,25 +439,8 @@ app.delete('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res,
   }
 });
 
-app.delete('/api/users/:userId/reviews/:reviewId', isLoggedIn, async(req, res, next)=> {
-  console.log(`DELETE /api/users/${req.params.userId}/reviews/${req.params.reviewId} requested by user ${req.user?.id}, admin status: ${req.user?.is_admin}`);
-  try {
-    if(req.params.userId !== req.user.id && !req.user.is_admin){
-      const error = Error('not authorized');
-      error.status = 401;
-      throw error;
-    }
-    await deleteCommentsByReview(req.params.reviewId);
-    await deleteReview({ user_id: req.params.userId, id: req.params.reviewId });
-    res.sendStatus(204);
-  }
-  catch(ex){
-    next(ex);
-  }
-});
-
 app.use((err, req, res, next)=> {
-  console.error('Error handler caught:', err); // Log the full error object
+  console.log(err);
   res.status(err.status || 500).send({ error: err.message ? err.message : err });
 });
 
