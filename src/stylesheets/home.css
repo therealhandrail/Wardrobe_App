@@ -5,7 +5,6 @@
   height: 100vh;
   width: 100vw;
   margin: 0;
-  overflow-y: scroll;
 }
 
 .leftBox {
@@ -20,6 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #ffffff;
 }
 
 /* Items */
@@ -68,11 +68,11 @@ button {
   border: none;
   border-radius: 0.4rem;
   cursor: pointer;
-  font-weight: thin;
+  font-weight: bold;
   font-size: 1rem;
   transition: background-color 0.2s ease;
 }
-button:hover {
+.myOutfitBox button:hover {
   background-color: #f8b17f;
 }
 
@@ -151,4 +151,8 @@ button:hover {
   align-items: center;
   width: 100%;
   margin: 0.5rem;
+}
+
+.admin{
+  margin-left: 10rem;
 }

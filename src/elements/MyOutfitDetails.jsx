@@ -107,26 +107,26 @@ function MyOutfitDetails() {
     }
   };
 
-  const handleToggleWorn = async () => {
-    if (!outfit || !user) return;
-    setActionError(null);
-    const updatedOutfitData = {
-      ...outfit,
-      worn_previously: !(outfit.worn_previously ?? false),
-      user_id: user.id,
-    };
-    try {
-      const response = await updateOutfit(outfit.id, updatedOutfitData);
-      const updatedOutfit =
-        response.data && Array.isArray(response.data)
-          ? response.data[0]
-          : response.data;
-      setOutfit(updatedOutfit || outfit);
-    } catch (err) {
-      console.error("Failed to update outfit worn status:", err);
-      setActionError("Could not update worn status. Please try again.");
-    }
-  };
+  // const handleToggleWorn = async () => {
+  //   if (!outfit || !user) return;
+  //   setActionError(null);
+  //   const updatedOutfitData = {
+  //     ...outfit,
+  //     worn_previously: !(outfit.worn_previously ?? false),
+  //     user_id: user.id,
+  //   };
+  //   try {
+  //     const response = await updateOutfit(outfit.id, updatedOutfitData);
+  //     const updatedOutfit =
+  //       response.data && Array.isArray(response.data)
+  //         ? response.data[0]
+  //         : response.data;
+  //     setOutfit(updatedOutfit || outfit);
+  //   } catch (err) {
+  //     console.error("Failed to update outfit worn status:", err);
+  //     setActionError("Could not update worn status. Please try again.");
+  //   }
+  // };
 
   const handleDeleteOutfit = async () => {
     if (!outfit || !user) return;
@@ -178,18 +178,16 @@ function MyOutfitDetails() {
         </div>
         <div
           className="outfitControls"
-          style={{ marginTop: "1.5rem", textAlign: "center" }}
         >
-          <label style={{ marginRight: "1rem" }}>
+          <label>
             <input
               type="checkbox"
               checked={outfit.share_publicly}
               onChange={handleTogglePrivacy}
-              style={{ marginRight: "0.5rem" }}
             />
             Public
           </label>
-          <label style={{ marginRight: "1rem" }}>
+          {/* <label style={{ marginRight: "1rem" }}>
             <input
               type="checkbox"
               checked={outfit.worn_previously ?? false}
@@ -197,7 +195,7 @@ function MyOutfitDetails() {
               style={{ marginRight: "0.5rem" }}
             />
             Worn Previously
-          </label>
+          </label> */}
           <button onClick={handleDeleteOutfit}>Delete Outfit</button>
         </div>
         {outfit.tags && outfit.tags.length > 0 && (

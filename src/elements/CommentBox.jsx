@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getReviewComments, createComment } from "../client/api";
+import { useAuth } from "../client/authContext";
 import "../stylesheets/comments.css";
 
 function CommentBox({ outfitId, reviewId }) {
@@ -7,6 +8,7 @@ function CommentBox({ outfitId, reviewId }) {
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!outfitId || !reviewId) {
@@ -47,11 +49,17 @@ function CommentBox({ outfitId, reviewId }) {
       return;
     }
 
+    if (!user || !user.id) {
+      setError("User not available. Cannot post comment.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     const commentData = {
-      content: newComment,
+      user_id: user.id,
+      comment: newComment,
     };
 
     try {
@@ -66,6 +74,9 @@ function CommentBox({ outfitId, reviewId }) {
     }
   };
 
+  // Add console log here to inspect comments state
+  console.log('Current comments state:', comments);
+
   return (
     <div className="comment-box-container">
       <h3>Comments</h3>
@@ -77,9 +88,9 @@ function CommentBox({ outfitId, reviewId }) {
           <p>No comments yet. Be the first!</p>
         )}
         {comments.map((comment) => (
-          <div key={comment.id || comment._id} className="comment-item">
-            <p className="content">{comment.content}</p>
-          </div>
+          <React.Fragment key={comment.id || comment._id}>
+            <p className="comment-item">{comment.comment}</p>
+          </React.Fragment>
         ))}
       </div>
 

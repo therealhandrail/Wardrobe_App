@@ -5,7 +5,6 @@
   justify-content: center;
   height: 100vh;
   background-color: #895365;
-  overflow-y: scroll;
 }
 
 form.addItemForm {
@@ -18,4 +17,31 @@ form.addItemForm {
   border-radius: 2rem;
   box-shadow: 0 0 5px;
   font-weight: 100;
+}
+.addItemForm h2 {
+  color: #ffffe8
+}
+.addItemForm label {
+  color: #ffffe8;
+  margin-top: 2rem;
+}
+
+.addItemForm button {
+  padding: 10px 15px;
+  background-color: #895365;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+.addItemForm button:hover {
+  background-color: #f8b17f;
+}
+
+.addItemForm button:disabled {
+  background-color: rgb(165, 165, 165);
+  cursor: not-allowed;
 }

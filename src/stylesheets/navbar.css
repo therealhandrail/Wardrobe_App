@@ -6,6 +6,10 @@
 
 .navbar a {
   color: #ffffe8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
 }
 .navbar {
   display: flex;
@@ -17,6 +21,7 @@
   top: 0;
   overflow: hidden;
   position: sticky;
+  color: #ffffe8;
 }
 .logo {
   display: flex;
@@ -28,4 +33,21 @@
   justify-content: center;
   font-size: 1.5rem;
   text-decoration: none;
+}
+.nav-link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  color: #ffffe8;
+  text-decoration: none;
+  display: inline;
+  margin-left: 1rem;
+}
+
+.nav-greeting {
+  cursor: default;
+  margin-left: 1rem;
 }

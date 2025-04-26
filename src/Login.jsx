@@ -21,7 +21,6 @@ function Login() {
 
       if (loginResponse.data && loginResponse.data.token) {
         const token = loginResponse.data.token;
-
         localStorage.setItem("AuthToken", token);
 
         try {

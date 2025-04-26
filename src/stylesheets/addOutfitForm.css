@@ -1,25 +1,174 @@
-.addOutfitBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+.pageBox {
   background-color: #895365;
-  padding: 2rem;
+  min-height: 100vh;
+  width: 100%;
+  color: #ffffe8;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
 }
-form.addOutfitForm {
+
+.addOutfitBox {
+  max-width: 90%;
+  width: 900px;
+  margin: 2rem auto;
+  padding: 2em;
+  background-color: #2c262e;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #ffffe8;
+}
+
+.addOutfitBox h2 {
+  text-align: center;
+  margin-bottom: 1.5em;
+  font-size: 1.8rem;
+}
+
+/* Form Structure */
+.addOutfitForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em; 
+}
+
+.form-section {
+  padding: 1.5em;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #2c262e;
+}
+
+.form-section h3 {
+  margin-top: 0;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5em;
+  font-size: 1.3rem;
+}
+
+/* Input Styling */
+.addOutfitForm label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: #ffffe8;
+}
+
+.addOutfitForm input[type="text"]
+ {
+  padding: 0.75em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem; 
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1em; 
+}
+.addOutfitForm .checkbox-label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  margin-bottom: 0;
+  padding: 0.5em 0;
+}
+Checkbox itself
+.addOutfitForm .checkbox-label input[type="checkbox"] {
+  width: auto;
+  padding: 0;
+  margin: 0 0.75em 0 0;
+  flex-shrink: 0; 
+}
+.addOutfitForm .checkbox-label span {
+  flex-grow: 1;
+}
+
+.itemSelectionBox {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5em;
+}
+
+.itemSelectItem {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 1em;
+  text-align: center;
+  background-color: #fdfdfd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease-in-out;
+}
+.itemSelectItem:hover {
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.itemSelectItem input[type="checkbox"] {
+  margin-bottom: 0.5em;
+  accent-color: #2c262e;
+  width: auto;
+  padding: 0;
+}
+
+.itemSelectItem label {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #2c262e;
-  padding: 2rem 3rem;
-  border-radius: 2rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  font-weight: 100;
-  color: #eee;
-  width: 80%;
-  max-width: 800px;
+  cursor: pointer;
+  font-weight: normal;
+  margin-bottom: 0;
 }
-.itemSelectItem input[type="checkbox"]:checked + label {
-  border: 2px solid #895365;
+
+.itemSelectImage {
+  height: 120px;
+  width: 100%;
+  object-fit: contain;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+}
+
+.itemSelectItem span {
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* Submit Button Styling */
+.addOutfitBox button {
+  padding: 10px 15px;
+  background-color: #895365;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+.addOutfitBox button:hover {
+  background-color: #f8b17f;
+}
+
+.addOutfitBox button:disabled {
+  background-color: rgb(165, 165, 165);
+  cursor: not-allowed;
+}
+
+/* Error/Success Message Styling */
+.addOutfitBox p[style*="color: red"],
+.addOutfitBox p[style*="color: green"] {
+  text-align: center;
+  margin-bottom: 1em;
+  font-weight: bold;
+  padding: 0.5em;
+  border-radius: 4px;
+}
+
+.addOutfitBox p[style*="color: red"] {
+  background-color: #f8d7da;
+  color: #721c24 !important;
+  border: 1px solid #f5c6cb;
+}
+
+.addOutfitBox p[style*="color: green"] {
+  background-color: #d4edda;
+  color: #155724 !important;
+  border: 1px solid #c3e6cb;
 }

@@ -48,6 +48,6 @@ button.submitBtn {
   font-size: 1rem;
   font-weight: 900;
 }
-button:hover {
+.authContainer button:hover {
   background-color: #f8b17f;
 }

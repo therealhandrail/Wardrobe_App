@@ -103,7 +103,7 @@ const AddOutfitPage = () => {
           .filter((tag) => tag !== "");
         if (tagArray.length > 0) {
           const tagPromises = tagArray.map((tag) =>
-            addOutfitTag(newOutfitId, { name: tag })
+            addOutfitTag(newOutfitId, { user_id: user.id, tag: tag })
           );
           await Promise.all(tagPromises);
           console.log("Outfit tags added.");
@@ -135,97 +135,101 @@ const AddOutfitPage = () => {
   // End of core functionality /////////////////////////////////////////////////////
 
   return (
-    <div className="addOutfitBox">
-      <h2>Create New Outfit</h2>
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      {submitError && <p style={{ color: "red" }}>{submitError}</p>}
+    <div className="pageBox">
+      <div className="addOutfitBox">
+        <h2>Create New Outfit</h2>
+        {success && <p style={{ color: "green" }}>{success}</p>}
+        {submitError && <p style={{ color: "red" }}>{submitError}</p>}
 
-      <form className="addOutfitForm" onSubmit={handleSubmit}>
-        <div className="form-section">
-          <h3>Details</h3>
-          <div>
-            <label htmlFor="outfitName">Outfit Name:</label>
-            <input
-              id="outfitName"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="e.g., Summer Casual"
-            />
-          </div>
-          <div>
-            <label htmlFor="outfitTags">Tags (comma-separated):</label>
-            <input
-              id="outfitTags"
-              type="text"
-              placeholder="e.g., beach, vacation, sunny"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="isPrivate" className="checkbox-label">
+        <form className="addOutfitForm" onSubmit={handleSubmit}>
+          <div className="form-section">
+            <h3>Details</h3>
+            <div>
+              <label htmlFor="outfitName">Outfit Name:</label>
               <input
-                id="isPrivate"
-                type="checkbox"
-                checked={isPrivate}
-                onChange={(e) => setIsPrivate(e.target.checked)}
+                id="outfitName"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="e.g., Summer Casual"
               />
-              <span>
-                Make this outfit private? (Will not be shared publicly)
-              </span>
-            </label>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h3>Select Items (Max 10)</h3>
-          {loadingItems && <p>Loading your items...</p>}
-          {itemsError && <p style={{ color: "red" }}>{itemsError}</p>}
-          {!loadingItems && !itemsError && userItems.length === 0 && (
-            <p>
-              You haven't added any clothing items yet!{" "}
-              <a href="/AddItemPage">Add some now?</a>
-            </p>
-          )}
-          {!loadingItems && userItems.length > 0 && (
-            <div className="itemSelectionBox">
-              {userItems.map((item) => (
-                <div key={item.id} className="itemSelectItem">
-                  <input
-                    type="checkbox"
-                    id={`item-${item.id}`}
-                    checked={selectedItems.includes(item.id)}
-                    onChange={() => handleItemSelect(item.id)}
-                    disabled={
-                      selectedItems.length >= 10 &&
-                      !selectedItems.includes(item.id)
-                    }
-                  />
-                  <label htmlFor={`item-${item.id}`}>
-                    <img
-                      src={item.clothing_img_link || "./assets/placeholder.png"}
-                      alt={item.name || "Clothing item"}
-                      style={{ height: "10rem" }}
-                      className="itemSelectImage"
-                    />
-                    <span>{item.name || "Unnamed Item"}</span>
-                  </label>
-                </div>
-              ))}
             </div>
-          )}
-        </div>
+            <div>
+              <label htmlFor="outfitTags">Tags (comma-separated):</label>
+              <input
+                id="outfitTags"
+                type="text"
+                placeholder="e.g., beach, vacation, sunny"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="isPrivate" className="checkbox-label">
+                <input
+                  id="isPrivate"
+                  type="checkbox"
+                  checked={isPrivate}
+                  onChange={(e) => setIsPrivate(e.target.checked)}
+                />
+                <span>
+                  Make this outfit private? (Will not be shared publicly)
+                </span>
+              </label>
+            </div>
+          </div>
 
-        <button
-          type="submit"
-          className="submitBtn"
-          disabled={selectedItems.length === 0 || loadingItems}
-        >
-          Create Outfit
-        </button>
-      </form>
+          <div className="form-section">
+            <h3>Select Items (Max 10)</h3>
+            {loadingItems && <p>Loading your items...</p>}
+            {itemsError && <p style={{ color: "red" }}>{itemsError}</p>}
+            {!loadingItems && !itemsError && userItems.length === 0 && (
+              <p>
+                You haven't added any clothing items yet!{" "}
+                <a href="/AddItemPage">Add some now?</a>
+              </p>
+            )}
+            {!loadingItems && userItems.length > 0 && (
+              <div className="itemSelectionBox">
+                {userItems.map((item) => (
+                  <div key={item.id} className="itemSelectItem">
+                    <input
+                      type="checkbox"
+                      id={`item-${item.id}`}
+                      checked={selectedItems.includes(item.id)}
+                      onChange={() => handleItemSelect(item.id)}
+                      disabled={
+                        selectedItems.length >= 10 &&
+                        !selectedItems.includes(item.id)
+                      }
+                    />
+                    <label htmlFor={`item-${item.id}`}>
+                      <img
+                        src={
+                          item.clothing_img_link || "./assets/placeholder.png"
+                        }
+                        alt={item.name || "Clothing item"}
+                        style={{ height: "10rem" }}
+                        className="itemSelectImage"
+                      />
+                      <span>{item.name || "Unnamed Item"}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="submitBtn"
+            disabled={selectedItems.length === 0 || loadingItems}
+          >
+            Create Outfit
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

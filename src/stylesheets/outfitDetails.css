@@ -35,7 +35,6 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  align-self: flex-end;
   font-size: 1em;
   transition: background-color 0.2s ease;
 }
@@ -110,6 +109,18 @@
   overflow: hidden;
   margin: auto;
   width: 100%;
+}
+
+.outfitControls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.outfitControls input {
+  width: auto;
+  margin-top: 2rem;
 }
 
 /* Comments Section Styling */

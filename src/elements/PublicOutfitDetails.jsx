@@ -152,7 +152,7 @@ function PublicOutfitDetails() {
               reviewId={reviews[0].id || reviews[0]._id}
             />
           ) : (
-            <p>No comments yet. Add a review to enable comments.</p>
+            <p>No comments yet!</p>
           )}
         </div>
       </div>

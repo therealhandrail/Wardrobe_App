@@ -8,6 +8,7 @@ import AddItemPage from "./elements/AddItemPage";
 import AddOutfitPage from "./elements/AddOutfitPage";
 import PublicOutfitDetails from "./elements/PublicOutfitDetails";
 import MyOutfitDetails from "./elements/MyOutfitDetails";
+import AdminConsole from "./elements/AdminConsole";
 
 function App() {
   // I moved the token state stuff from App, to authContext
@@ -27,6 +28,7 @@ function App() {
           <Route path="/AddOutfitPage" element={<AddOutfitPage />} />
           <Route path="/outfit/:outfitId" element={<PublicOutfitDetails />} />
           <Route path="/my-outfits/:outfitId" element={<MyOutfitDetails />} />
+          <Route path="/admin" element={<AdminConsole />} />
         </Routes>
       </div>
     </div>
