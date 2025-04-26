@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getCommentComments, createComment } from "../client/api";
+import { getOutfitComments, createComment } from "../client/api";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/comments.css";
 
@@ -20,7 +20,7 @@ function CommentBox({ outfitId, commentId }) {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await getCommentComments(outfitId, commentId);
+        const response = await getOutfitComments(outfitId, commentId);
         setComments(response.data || []);
       } catch (err) {
         console.error("Failed to fetch comments:", err);
