@@ -77,39 +77,18 @@ export const addOutfitTag = (outfitId, tagData) =>
 export const deleteOutfitTag = (outfitTagId) =>
   apiClient.delete(`/outfitTags/${outfitTagId}`);
 
-// Reviews //
-export const getOutfitReviews = (outfitId) =>
-  apiClient.get(`/outfits/${outfitId}/reviews`);
-export const getReviewById = (outfitId, reviewId) =>
-  apiClient.get(`/outfits/${outfitId}/reviews/${reviewId}`);
-export const createReview = (outfitId, reviewData) =>
-  apiClient.post(`/outfits/${outfitId}/reviews`, reviewData);
-export const updateReview = (userId, reviewId, reviewData) =>
-  apiClient.put(`/users/${userId}/reviews/${reviewId}`, reviewData);
-export const deleteReview = (userId, reviewId) =>
-  apiClient.delete(`/users/${userId}/reviews/${reviewId}`);
-export const getMyReviews = () => apiClient.get("/reviews/me");
-
 // Comments //
-export const getReviewComments = (outfitId, reviewId) =>
-  apiClient.get(`/outfits/${outfitId}/reviews/${reviewId}/comments`);
-export const getCommentById = (outfitId, reviewId, commentId) =>
-  apiClient.get(
-    `/outfits/${outfitId}/reviews/${reviewId}/comments/${commentId}`
-  );
-export const createComment = (outfitId, reviewId, commentData) =>
-  apiClient.post(
-    `/outfits/${outfitId}/reviews/${reviewId}/comments`,
-    commentData
-  );
-export const updateComment = (userId, reviewId, commentId, commentData) =>
-  apiClient.put(
-    `/users/${userId}/reviews/${reviewId}/comments/${commentId}`,
-    commentData
-  );
+export const getOutfitComments = (outfitId) =>
+  apiClient.get(`/outfits/${outfitId}/comments`);
+export const getCommentById = (outfitId, commentId) =>
+  apiClient.get(`/outfits/${outfitId}/comments/${commentId}`);
+export const createComment = (outfitId, commentData) =>
+  apiClient.post(`/outfits/${outfitId}/comments`, commentData);
+export const updateComment = (userId, commentId, commentData) =>
+  apiClient.put(`/users/${userId}/comments/${commentId}`, commentData);
 export const deleteComment = (userId, commentId) =>
   apiClient.delete(`/users/${userId}/comments/${commentId}`);
-export const getMyComments = () => apiClient.get("/comments/me");
+//export const getMyComments = () => apiClient.get("/comments/me");
 
 // Admin //
 export const getAllUsers = () => apiClient.get("/users");

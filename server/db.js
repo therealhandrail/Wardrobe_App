@@ -10,7 +10,6 @@ const JWT = process.env.JWT || 'shhh'; //Change this later
 const createTables = async()=> {
   const SQL = `
     DROP TABLE IF EXISTS comments;
-    DROP TABLE IF EXISTS reviews;
     DROP TABLE IF EXISTS outfit_tags;
     DROP TABLE IF EXISTS clothing_tags;
     DROP TABLE IF EXISTS outfit_clothes;
@@ -56,26 +55,18 @@ const createTables = async()=> {
       outfit_id UUID REFERENCES outfits(id) NOT NULL,
       tag VARCHAR(20) NOT NULL
     );
-    CREATE TABLE reviews(
-      id UUID PRIMARY KEY,
-      user_id UUID REFERENCES users(id) NOT NULL,
-      outfit_id UUID REFERENCES outfits(id) NOT NULL,
-      CONSTRAINT unique_user_id_outfit_id UNIQUE (user_id, outfit_id),
-      written_rating VARCHAR(1000) NOT NULL
-    );
     CREATE TABLE comments(
       id UUID PRIMARY KEY,
-      review_id UUID REFERENCES reviews(id) NOT NULL,
       user_id UUID REFERENCES users(id) NOT NULL,
       outfit_id UUID REFERENCES outfits(id) NOT NULL,
-      comment VARCHAR(500) NOT NULL
+      written_rating VARCHAR(1000) NOT NULL
     );
   `;
   await client.query(SQL);
 };
 
 
-// Create Functions > users, clothing, outfits, outfit clothing groups, clothing tags, outfit tags, reviews, and comments are created here
+// Create Functions > users, clothing, outfits, outfit clothing groups, clothing tags, outfit tags, and comments are created here
 const createUser = async({ username, email, password, is_admin=false})=> {
   const SQL = `
     INSERT INTO users(id, username, email, password, is_admin) 
@@ -136,9 +127,9 @@ const createOutfitTag = async({ outfit_id, tag })=> {
   return response.rows[0];
 };
 
-const createReview = async({ user_id, outfit_id, written_rating })=> {
+const createComment = async({ user_id, outfit_id, written_rating })=> {
   const SQL = `
-    INSERT INTO reviews(id, user_id, outfit_id, written_rating) 
+    INSERT INTO comments(id, user_id, outfit_id, written_rating) 
     VALUES($1, $2, $3, $4) 
     RETURNING *
   `;
@@ -146,46 +137,20 @@ const createReview = async({ user_id, outfit_id, written_rating })=> {
   return response.rows[0];
 };
 
-const createComment = async({ review_id, user_id, outfit_id, comment })=> {
-  const SQL = `
-    INSERT INTO comments(id, review_id, user_id, outfit_id, comment) 
-    VALUES($1, $2, $3, $4, $5) 
-    RETURNING *
-  `;
-  const response = await client.query(SQL, [uuid.v4(), review_id, user_id, outfit_id, comment]);
-  return response.rows[0];
-};
-
-
 // Authenticates the provided username and password and returns a token
 const authenticate = async({ username, password })=> {
-  console.log(`Attempting authentication for username: ${username}`); // Log received username
   const SQL = `
     SELECT id, password 
     FROM users 
     WHERE username=$1;
   `;
   const response = await client.query(SQL, [username]);
-  if(!response.rows.length){
-    console.log(`Authentication failed: Username '${username}' not found.`); // Log username not found
+  if(!response.rows.length || (await bcrypt.compare(password, response.rows[0].password)) === false){
     const error = Error('not authorized');
     error.status = 401;
     throw error;
   }
-  
-  const user = response.rows[0];
-  const passwordMatch = await bcrypt.compare(password, user.password);
-  console.log(`Password comparison result for '${username}': ${passwordMatch}`); // Log bcrypt result
-
-  if(!passwordMatch){
-    console.log(`Authentication failed: Incorrect password for username '${username}'.`); // Log password mismatch
-    const error = Error('not authorized');
-    error.status = 401;
-    throw error;
-  }
-
-  const token = await jwt.sign({ id: user.id}, JWT);
-  console.log(`Authentication successful for '${username}'. Token generated.`); // Log success
+  const token = await jwt.sign({ id: response.rows[0].id}, JWT);
   return { token };
 };
 
@@ -216,8 +181,7 @@ const findUserWithToken = async(token)=> {
 };
 
 // Retrieve Functions > users, user, user's clothing, clothing, outfits, user's outfits, outfit, outfit clothes, 
-// outfit tags, clothing tags, outfit reviews, outfit review, user's outfit reviews, review comments, 
-// review comment and user's review comments
+// outfit tags, clothing tags, outfit comments, outfit comment, user's outfit comments
 const fetchUsers = async()=> {
   const SQL = `
     SELECT * FROM users;
@@ -298,55 +262,32 @@ const fetchOutfitTags = async(outfit_id)=> {
   return response.rows;
 };
 
-const fetchOutfitReviews = async(outfit_id)=> {
+const fetchOutfitComments = async(outfit_id)=> {
   const SQL = `
-    SELECT * FROM reviews WHERE outfit_id = $1
+    SELECT * FROM comments WHERE outfit_id = $1
   `;
   const response = await client.query(SQL, [outfit_id]);
   return response.rows;
 };
 
-const fetchOutfitReview = async({id, outfit_id})=> {
+const fetchOutfitComment = async({id, outfit_id})=> {
   const SQL = `
-    SELECT * FROM reviews WHERE id = $1 AND outfit_id = $2
+    SELECT * FROM comments WHERE id = $1 AND outfit_id = $2
   `;
   const response = await client.query(SQL, [id, outfit_id]);
   return response.rows;
 };
 
-const fetchUserReviews = async(user_id)=> {
-  const SQL = `
-    SELECT * FROM reviews WHERE user_id = $1
-  `;
-  const response = await client.query(SQL, [user_id]);
-  return response.rows;
-};
+//Unused
+// const fetchUserComments = async(user_id)=> {
+//   const SQL = `
+//     SELECT * FROM comments WHERE user_id = $1
+//   `;
+//   const response = await client.query(SQL, [user_id]);
+//   return response.rows;
+// };
 
-const fetchReviewComments = async({outfit_id, review_id})=> {
-  const SQL = `
-    SELECT * FROM comments WHERE outfit_id=$1 AND review_id = $2
-  `;
-  const response = await client.query(SQL, [outfit_id, review_id]);
-  return response.rows;
-};
-
-const fetchReviewComment = async({id, outfit_id, review_id})=> {
-  const SQL = `
-    SELECT * FROM comments WHERE id=$1 AND outfit_id=$2 AND review_id = $3
-  `;
-  const response = await client.query(SQL, [id, outfit_id, review_id]);
-  return response.rows;
-};
-
-const fetchUserComments = async(user_id)=> {
-  const SQL = `
-    SELECT * FROM comments WHERE user_id = $1
-  `;
-  const response = await client.query(SQL, [user_id]);
-  return response.rows;
-};
-
-// Updates functions > clothing, outfits, reviews, comments
+// Updates functions > clothing, outfits, comments
 
 const updateClothing = async({ name, clothing_type, store_link, clothing_img_link, id, user_id })=> {
   const SQL = `
@@ -368,9 +309,9 @@ const updateOutfit = async({ name, previously_worn, share_publicly, id, user_id 
   return response.rows;
 };
 
-const updateReview = async({ written_rating, id, user_id })=> {
+const updateComment = async({ written_rating, id, user_id })=> {
   const SQL = `
-    UPDATE reviews 
+    UPDATE comments 
     SET  written_rating=$1
     WHERE id=$2 AND user_id=$3 RETURNING *
   `; 
@@ -378,17 +319,7 @@ const updateReview = async({ written_rating, id, user_id })=> {
   return response.rows;
 };
 
-const updateComment = async({ comment, id, user_id })=> {
-  const SQL = `
-    UPDATE comments 
-    SET  comment=$1
-    WHERE id=$2 AND user_id=$3 RETURNING *
-  `; 
-  const response = await client.query(SQL, [comment, id, user_id]);
-  return response.rows;
-};
-
-// Delete functions > clothing, outfit, outfit clothes by outfit, outfit clothes by clothing, clothing tag, outfit tag, review, reviews, comment, review comments, comments by outfit
+// Delete functions > clothing, outfit, outfit clothes by outfit, outfit clothes by clothing, clothing tag, outfit tag, comment, comments
 
 const deleteClothing = async(id)=> {
   const SQL = `
@@ -456,36 +387,12 @@ const deleteOutfitTags = async(outfit_id)=> {
   await client.query(SQL, [outfit_id]);
 };
 
-const deleteReviews = async(outfit_id)=> {
-  const SQL = `
-    DELETE FROM reviews 
-    WHERE outfit_id=$1
-  `;
-  await client.query(SQL, [outfit_id]);
-};
-
-const deleteReview = async({ user_id, id })=> {
-  const SQL = `
-    DELETE FROM reviews 
-    WHERE user_id=$1 AND id=$2
-  `;
-  await client.query(SQL, [user_id, id]);
-};
-
-const deleteCommentsByOutfit = async(outfit_id)=> {
+const deleteComments = async(outfit_id)=> {
   const SQL = `
     DELETE FROM comments 
     WHERE outfit_id=$1
   `;
   await client.query(SQL, [outfit_id]);
-};
-
-const deleteCommentsByReview = async(review_id)=> {
-  const SQL = `
-    DELETE FROM comments 
-    WHERE review_id=$1
-  `;
-  await client.query(SQL, [review_id]);
 };
 
 const deleteComment = async({ user_id, id })=> {
@@ -496,7 +403,6 @@ const deleteComment = async({ user_id, id })=> {
   await client.query(SQL, [user_id, id]);
 };
 
-
 module.exports = {
   client,
   createTables,
@@ -506,7 +412,7 @@ module.exports = {
   createOutfitClothes,
   createClothingTag,
   createOutfitTag,
-  createReview,
+  createComment,
   createComment,
   authenticate,
   findUserWithToken,
@@ -520,15 +426,15 @@ module.exports = {
   fetchOutfitClothes,
   fetchClothingTags,
   fetchOutfitTags,
-  fetchOutfitReviews,
-  fetchOutfitReview,
-  fetchUserReviews,
-  fetchReviewComments,
-  fetchReviewComment,
+  fetchOutfitComments,
+  fetchOutfitComment,
+  fetchUserComments,
+  fetchCommentComments,
+  fetchCommentComment,
   fetchUserComments,
   updateClothing,
   updateOutfit,
-  updateReview,
+  updateComment,
   updateComment,
   deleteClothing,
   deleteOutfit,
@@ -538,9 +444,9 @@ module.exports = {
   deleteClothingTags,
   deleteOutfitTag,
   deleteOutfitTags,
-  deleteReviews,
-  deleteReview,
+  deleteComments,
+  deleteComment,
   deleteCommentsByOutfit,
-  deleteCommentsByReview,
+  deleteCommentsByComment,
   deleteComment
 };
