@@ -28,6 +28,8 @@ const AddOutfitPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // core functionality here /////////////////////
+
   useEffect(() => {
     const fetchUserItems = async () => {
       if (!isAuthenticated || !user?.id) {

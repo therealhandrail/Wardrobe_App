@@ -53,7 +53,8 @@ function MyOutfitBox() {
       const descriptionMatch = outfit.description
         ?.toLowerCase()
         .includes(lowerCaseSearchTerm);
-      // The tags need some work. They dont accept spaces so I need to adjust 
+      // The tags need some work. It looks like they are sending to db, but not returning?
+      // no 401 or 404 so im not sure yet
       const tagsMatch = outfit.tags?.some((tag) =>
         typeof tag === "string"
           ? tag.toLowerCase().includes(lowerCaseSearchTerm)

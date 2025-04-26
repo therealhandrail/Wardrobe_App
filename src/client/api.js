@@ -47,7 +47,9 @@ export const updateOutfit = (outfitId, outfitData) =>
 export const deleteOutfit = (outfitId, data) =>
   apiClient.delete(`/outfits/${outfitId}`, { data });
 export const addClothingToOutfit = (outfitId, clothingId, userId) =>
-  apiClient.post(`/outfits/${outfitId}/clothing/${clothingId}`, { user_id: userId });
+  apiClient.post(`/outfits/${outfitId}/clothing/${clothingId}`, {
+    user_id: userId,
+  });
 
 // Clothing (Items) //
 export const getClothingById = (clothingId) =>
@@ -93,7 +95,8 @@ export const getReviewComments = (outfitId, reviewId) =>
   apiClient.get(`/outfits/${outfitId}/reviews/${reviewId}/comments`);
 export const getCommentById = (outfitId, reviewId, commentId) =>
   apiClient.get(
-    `/outfits/${outfitId}/reviews/${reviewId}/comments/${commentId}`  );
+    `/outfits/${outfitId}/reviews/${reviewId}/comments/${commentId}`
+  );
 export const createComment = (outfitId, reviewId, commentData) =>
   apiClient.post(
     `/outfits/${outfitId}/reviews/${reviewId}/comments`,
@@ -113,4 +116,3 @@ export const getAllUsers = () => apiClient.get("/users");
 export const getUserById = (userId) => apiClient.get(`/users/${userId}`);
 
 export default apiClient;
-

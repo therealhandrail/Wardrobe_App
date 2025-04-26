@@ -74,9 +74,6 @@ function CommentBox({ outfitId, reviewId }) {
     }
   };
 
-  // Add console log here to inspect comments state
-  console.log('Current comments state:', comments);
-
   return (
     <div className="comment-box-container">
       <h3>Comments</h3>
