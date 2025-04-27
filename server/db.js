@@ -10,6 +10,7 @@ const JWT = process.env.JWT || 'shhh'; //Change this later
 const createTables = async()=> {
   const SQL = `
     DROP TABLE IF EXISTS comments;
+    DROP TABLE IF EXISTS reviews;
     DROP TABLE IF EXISTS outfit_tags;
     DROP TABLE IF EXISTS clothing_tags;
     DROP TABLE IF EXISTS outfit_clothes;
