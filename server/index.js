@@ -14,6 +14,7 @@ const {
   fetchUser,
   fetchUserClothing,
   fetchClothing,
+  fetchAllClothing,
   fetchOutfits,
   fetchUserOutfits, 
   fetchOutfit,
@@ -213,7 +214,7 @@ app.get('/api/clothing', isLoggedIn, async(req, res, next)=> {
       error.status = 401;
       throw error;
     }
-    res.send(await fetchClothing());
+    res.send(await fetchAllClothing());
   }
   catch(ex){
     next(ex);
