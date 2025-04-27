@@ -53,7 +53,7 @@ function AdminConsole() {
         try {
           console.log("AdminConsole: Fetching all clothing...");
           const response = await getAllClothing();
-          setUsers(response.data || []);
+          setClothing(response.data || []);
           console.log("AdminConsole: Clothing fetched successfully.", response.data);
         } catch (error) {
           console.error("AdminConsole: Error fetching clothing:", error);
