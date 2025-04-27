@@ -21,13 +21,7 @@ const AddOutfitPage = () => {
   const [success, setSuccess] = useState("");
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, navigate]);
-
+  
   // core functionality here /////////////////////
 
   useEffect(() => {

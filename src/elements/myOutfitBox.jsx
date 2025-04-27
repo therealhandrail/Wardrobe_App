@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { getUserOutfits } from "../client/api.js";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/home.css";
+import LOGO from "../assets/Wardrobe_App_Logo.png";
 
 function MyOutfitBox() {
   const [outfits, setOutfits] = useState([]);
@@ -68,43 +69,55 @@ function MyOutfitBox() {
   // skipping the edit section for now, circle back if we have time
 
   return (
-    <div className="myOutfitBox">
-      <input
-        type="text"
-        placeholder="Search your outfits..."
-        className="searchBar"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <div className="buttonBox">
-        <Link to="/AddOutfitPage">
-          <button>Add Outfit</button>
-        </Link>
-        <Link to="/AddItemPage">
-          <button>Add Item</button>
-        </Link>
-      </div>
+    <div className="leftBoxInterior">
+      {!isAuthenticated && <div className="greetingBox">
+        <img src={LOGO} alt="Home" height="400rem" />
+        <h1>Welcome to Outfitters!</h1>
+        <p>To create and save your own wardrobe and outfits, please log in or register for an account.</p>
+      </div>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {isAuthenticated && <div className="myOutfitBox">
+        <input
+          type="text"
+          placeholder="Search your outfits..."
+          className="searchBar"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <div className="buttonBox">
+          <Link to="/AddOutfitPage">
+            <button>Add Outfit</button>
+          </Link>
+          <Link to="/AddItemPage">
+            <button>Add Item</button>
+          </Link>
+          <Link to="/MyClothing">
+            <button>My Clothing</button>
+          </Link>
 
-      <div className="outfitPreview">
-        {filteredOutfits.length > 0
-          ? filteredOutfits.map((outfit) => (
-              <div className="outfitList" key={outfit.id}>
-                <Link to={`/my-outfits/${outfit.id}`}>
-                  <h2>{outfit.name || "Untitled Outfit"}</h2>
-                </Link>
-              </div>
-            ))
-          : !error &&
+        </div>
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <div className="outfitPreview">
+          {filteredOutfits.length > 0
+            ? filteredOutfits.map((outfit) => (
+                <div className="outfitList" key={outfit.id}>
+                  <Link to={`/my-outfits/${outfit.id}`}>
+                    <h2>{outfit.name || "Untitled Outfit"}</h2>
+                  </Link>
+                </div>
+              ))
+            : !error &&
+              isAuthenticated &&
+              !searchTerm && <p>You haven't created any outfits yet.</p>}
+          {!error &&
             isAuthenticated &&
-            !searchTerm && <p>You haven't created any outfits yet.</p>}
-        {!error &&
-          isAuthenticated &&
-          searchTerm &&
-          filteredOutfits.length === 0 && <p>No outfits match your search.</p>}
-        {!isAuthenticated && <p>Please log in to see your outfits.</p>}
-      </div>
+            searchTerm &&
+            filteredOutfits.length === 0 && <p>No outfits match your search.</p>}
+          {!isAuthenticated && <p>Please log in to see your outfits.</p>}
+        </div>
+      </div>}
     </div>
   );
 }
