@@ -206,6 +206,14 @@ const fetchUserClothing = async(user_id)=> {
   return response.rows;
 };
 
+const fetchAllClothing = async(id)=> {
+  const SQL = `
+    SELECT * FROM clothing;
+  `;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
 const fetchClothing = async(id)=> {
   const SQL = `
     SELECT * FROM clothing WHERE id = $1;
@@ -420,6 +428,7 @@ module.exports = {
   fetchUser,
   fetchUserClothing,
   fetchClothing,
+  fetchAllClothing,
   fetchOutfits,
   fetchUserOutfits, 
   fetchOutfit,

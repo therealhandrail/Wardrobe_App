@@ -14,6 +14,7 @@ const {
   fetchUser,
   fetchUserClothing,
   fetchClothing,
+  fetchAllClothing,
   fetchOutfits,
   fetchUserOutfits, 
   fetchOutfit,
@@ -200,6 +201,20 @@ app.get('/api/users', isLoggedIn, async(req, res, next)=> {
       throw error;
     }
     res.send(await fetchUsers());
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.get('/api/clothing', isLoggedIn, async(req, res, next)=> {
+  try {
+    if(!req.user.is_admin){
+      const error = Error('not authorized');
+      error.status = 401;
+      throw error;
+    }
+    res.send(await fetchAllClothing());
   }
   catch(ex){
     next(ex);
