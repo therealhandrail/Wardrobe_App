@@ -13,12 +13,6 @@ const AddItemPage = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

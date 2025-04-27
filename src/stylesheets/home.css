@@ -33,6 +33,30 @@
   margin: 1rem;
 }
 
+.greetingBox {
+  display: flex;
+  height: 80vh;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.greetingBox h1 {
+  color: #ffffe8;
+  align-self: center;
+}
+
+.greetingBox p {
+  color: #ffffe8;
+  align-self: center;
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
 .myOutfitBox {
   display: flex;
   flex-direction: column;

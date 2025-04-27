@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getOutfitComments, createComment } from "../client/api";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/comments.css";
+import PullUsername from "./PullUsername";
 
 function CommentBox({ outfitId }) {
   const [comments, setComments] = useState([]);
@@ -87,6 +88,7 @@ function CommentBox({ outfitId }) {
         )}
         {comments.map((comment) => (
           <div key={comment.id || comment._id} className="comment-item">
+            <PullUsername userId={comment.user_id} />
             <p>{comment.written_rating}</p>
           </div>
         ))}
