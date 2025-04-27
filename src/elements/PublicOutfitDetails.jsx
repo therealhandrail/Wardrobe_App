@@ -8,6 +8,7 @@ import {
 } from "../client/api";
 import CommentBox from "./CommentBox";
 import "../stylesheets/outfitDetails.css";
+import PullUsername from "./PullUsername";
 
 function PublicOutfitDetails() {
   const { outfitId } = useParams();
@@ -101,6 +102,10 @@ function PublicOutfitDetails() {
     <div className="OutfitContainer">
       <div className="outfitDetailsContainer">
         <h1>{outfit.name || "Untitled Outfit"}</h1>
+        <div className="outfitOwner">
+          <h3>Created By: </h3>
+          <PullUsername userId={outfit.user_id}/>
+        </div>
         {error && (
           <p className="error-message" style={{ color: "orange" }}>
             {error}
