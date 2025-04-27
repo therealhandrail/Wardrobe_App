@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { deleteComment } from "../client/api";
-import { useNavigate } from "react-router-dom";
 
 function DeleteCommentButton ({userId, commentId}) {
   const [actionError, setActionError] = useState(null);

@@ -20,7 +20,7 @@
 
 .clothingPiece {
   border: 1px solid #ddd;
-  width: 25%;
+  width: 26%;
   border-radius: 0.25rem;
   padding: 1em;
   margin: 1em;
@@ -32,4 +32,9 @@
   object-fit: contain;
   margin-bottom: 0.5em;
   border-radius: 4px;
+}
+
+.deleteClothing {
+  display: flex;
+  justify-content: center;
 }

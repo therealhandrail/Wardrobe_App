@@ -60,8 +60,8 @@ export const createClothing = (clothingData) =>
   apiClient.post("/clothing", clothingData);
 export const updateClothing = (clothingId, clothingData) =>
   apiClient.put(`/clothing/${clothingId}`, clothingData);
-export const deleteClothing = (clothingId) =>
-  apiClient.delete(`/clothing/${clothingId}`);
+export const deleteClothing = (clothingId, data) =>
+  apiClient.delete(`/clothing/${clothingId}`, {data});
 
 // Tags //
 export const getClothingTags = (clothingId) =>

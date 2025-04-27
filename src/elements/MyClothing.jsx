@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../stylesheets/myClothing.css";
 import { useAuth } from "../client/authContext";
 import { getUserClothing } from "../client/api.js";
+import DeleteClothingButton from "./DeleteClothingButton.jsx";
 
 
 function MyClothing () {
@@ -48,6 +49,7 @@ function MyClothing () {
             </a>        
             <h3>{clothing.name}</h3>
             <p>Type: {clothing.clothing_type}</p>
+            <DeleteClothingButton clothingId={clothing.id} userId={clothing.user_id}/>
           </div>
         ))}
       </div>}
