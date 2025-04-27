@@ -82,10 +82,10 @@ export const getOutfitComments = (outfitId) =>
   apiClient.get(`/outfits/${outfitId}/comments`);
 export const getCommentById = (outfitId, commentId) =>
   apiClient.get(`/outfits/${outfitId}/comments/${commentId}`);
-export const createComment = (outfitId, commentData) =>
-  apiClient.post(`/outfits/${outfitId}/comments`, commentData);
-export const updateComment = (userId, commentId, commentData) =>
-  apiClient.put(`/users/${userId}/comments/${commentId}`, commentData);
+export const createComment = (outfitId, written_rating) =>
+  apiClient.post(`/outfits/${outfitId}/comments`, written_rating);
+export const updateComment = (userId, commentId, written_rating) =>
+  apiClient.put(`/users/${userId}/comments/${commentId}`, written_rating);
 export const deleteComment = (userId, commentId) =>
   apiClient.delete(`/users/${userId}/comments/${commentId}`);
 //export const getMyComments = () => apiClient.get("/comments/me");
