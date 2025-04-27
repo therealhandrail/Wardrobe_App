@@ -206,13 +206,9 @@ app.get('/api/users', isLoggedIn, async(req, res, next)=> {
   }
 });
 
-app.get('/api/users/:userId', isLoggedIn, async(req, res, next)=> {
+// Fetches a username
+app.get('/api/users/:userId', async(req, res, next)=> {
   try {
-    // if(!req.user.is_admin){
-    //   const error = Error('not authorized');
-    //   error.status = 401;
-    //   throw error;
-    // }
     res.send(await fetchUser(req.params.userId));
   }
   catch(ex){
