@@ -89,6 +89,7 @@ function CommentBox({ outfitId }) {
         {comments.map((comment) => (
           <div key={comment.id || comment._id} className="comment-item">
             <PullUsername userId={comment.user_id} />
+            <h4 className="spacer"> - </h4>
             <p>{comment.written_rating}</p>
           </div>
         ))}

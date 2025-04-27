@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import getUserById from "../client/api";
+import { getUserById } from "../client/api";
 
 function PullUsername({ userId }) {
   const [username, setUsername] = useState();
@@ -7,8 +7,8 @@ function PullUsername({ userId }) {
   useEffect(() => {
     try {
       async function fetchUserName() {
-        const currentUsername = await getUserById(userId);
-        setUsername(currentUsername.username);
+        const currentUserInfo = await getUserById(userId);
+        setUsername(currentUserInfo.data[0].username);
       }
       fetchUserName();
     } catch (error) {
@@ -19,7 +19,7 @@ function PullUsername({ userId }) {
   }, []);
 
   return (
-    <h4>{username}</h4>
+    <p className="username">{username}</p>
   )
 }
 export default PullUsername;
