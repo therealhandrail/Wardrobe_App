@@ -13,6 +13,7 @@ function CommentBox({ outfitId }) {
   useEffect(() => {
     if (!outfitId) {
       setError("Outfit ID is required.");
+      setComments([]);
       return;
     }
 
@@ -48,7 +49,6 @@ function CommentBox({ outfitId }) {
       setError("Cannot post comment without Outfit ID.");
       return;
     }
-
     if (!user || !user.id) {
       setError("User not available. Cannot post comment.");
       return;
@@ -64,7 +64,8 @@ function CommentBox({ outfitId }) {
 
     try {
       const response = await createComment(outfitId, written_review);
-      setComments((prevComments) => [...prevComments, response.data]);
+      const newCommentData = response.data;
+      setComments((prevComments) => [...prevComments, newCommentData]);
       setNewComment("");
     } catch (err) {
       console.error("Failed to post comment:", err);
