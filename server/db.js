@@ -428,10 +428,10 @@ module.exports = {
   fetchOutfitTags,
   fetchOutfitComments,
   fetchOutfitComment,
-  fetchUserComments,
-  fetchCommentComments,
-  fetchCommentComment,
-  fetchUserComments,
+  // fetchUserComments,
+  // fetchCommentComments,
+  // fetchCommentComment,
+  // fetchUserComments,
   updateClothing,
   updateOutfit,
   updateComment,
@@ -445,8 +445,5 @@ module.exports = {
   deleteOutfitTag,
   deleteOutfitTags,
   deleteComments,
-  deleteComment,
-  deleteCommentsByOutfit,
-  deleteCommentsByComment,
   deleteComment
 };
