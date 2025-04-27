@@ -54,7 +54,7 @@ function PublicOutfits() {
     <div className="publicBox">
       <input
         type="text"
-        placeholder="Search outfits by name or description..."
+        placeholder="Search outfits by name..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="searchBar"

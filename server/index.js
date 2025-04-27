@@ -206,6 +206,20 @@ app.get('/api/users', isLoggedIn, async(req, res, next)=> {
   }
 });
 
+app.get('/api/clothing', isLoggedIn, async(req, res, next)=> {
+  try {
+    if(!req.user.is_admin){
+      const error = Error('not authorized');
+      error.status = 401;
+      throw error;
+    }
+    res.send(await fetchClothing());
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 // Fetches a username
 app.get('/api/users/:userId', async(req, res, next)=> {
   try {

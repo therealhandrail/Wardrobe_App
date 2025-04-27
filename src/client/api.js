@@ -89,9 +89,10 @@ export const updateComment = (userId, commentId, written_rating) =>
 export const deleteComment = (userId, commentId) =>
   apiClient.delete(`/users/${userId}/comments/${commentId}`);
 export const getMyComments = () => apiClient.get("/comments/me");
+export const getUserById = (userId) => apiClient.get(`/users/${userId}`);
 
 // Admin //
 export const getAllUsers = () => apiClient.get("/users");
-export const getUserById = (userId) => apiClient.get(`/users/${userId}`);
+export const getAllClothing = () => apiClient.get("/clothing");
 
 export default apiClient;
