@@ -16,7 +16,7 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem("AuthToken");
     //
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = token;
     }
     return config;
   },
@@ -88,7 +88,7 @@ export const updateComment = (userId, commentId, written_rating) =>
   apiClient.put(`/users/${userId}/comments/${commentId}`, written_rating);
 export const deleteComment = (userId, commentId) =>
   apiClient.delete(`/users/${userId}/comments/${commentId}`);
-//export const getMyComments = () => apiClient.get("/comments/me");
+export const getMyComments = () => apiClient.get("/comments/me");
 
 // Admin //
 export const getAllUsers = () => apiClient.get("/users");

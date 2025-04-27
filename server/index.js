@@ -182,14 +182,14 @@ app.get('/api/outfits/:outfitId/comments/:commentId', async(req, res, next)=> {
 
 // Unused
 // Fetches user comments
-// app.get('/api/comments/me', isLoggedIn, async(req, res, next)=> {
-//   try {
-//     res.send(await fetchUserComments(req.user.id));
-//   }
-//   catch(ex){
-//     next(ex);
-//   }
-// });
+app.get('/api/comments/me', isLoggedIn, async(req, res, next)=> {
+  try {
+    res.send(await fetchUserComments(req.user.id));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
 
 // Fetches info for admin users
 app.get('/api/users', isLoggedIn, async(req, res, next)=> {

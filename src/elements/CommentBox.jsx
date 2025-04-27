@@ -3,7 +3,7 @@ import { getOutfitComments, createComment } from "../client/api";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/comments.css";
 
-function CommentBox({ outfitId, commentId }) {
+function CommentBox({ outfitId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState(null);
@@ -11,8 +11,8 @@ function CommentBox({ outfitId, commentId }) {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!outfitId || !commentId) {
-      setError("Outfit ID and Comment ID are required.");
+    if (!outfitId) {
+      setError("Outfit ID is required.");
       return;
     }
 
@@ -20,7 +20,7 @@ function CommentBox({ outfitId, commentId }) {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await getOutfitComments(outfitId, commentId);
+        const response = await getOutfitComments(outfitId);
         setComments(response.data || []);
       } catch (err) {
         console.error("Failed to fetch comments:", err);
@@ -32,7 +32,7 @@ function CommentBox({ outfitId, commentId }) {
     };
 
     fetchComments();
-  }, [outfitId, commentId]);
+  }, [outfitId]);
 
   const handleInputChange = (event) => {
     setNewComment(event.target.value);
@@ -44,8 +44,8 @@ function CommentBox({ outfitId, commentId }) {
       setError("Comment cannot be empty.");
       return;
     }
-    if (!outfitId || !commentId) {
-      setError("Cannot post comment without Outfit ID and Comment ID.");
+    if (!outfitId) {
+      setError("Cannot post comment without Outfit ID.");
       return;
     }
 
@@ -57,13 +57,13 @@ function CommentBox({ outfitId, commentId }) {
     setIsLoading(true);
     setError(null);
 
-    const commentData = {
+    const written_review = {
       user_id: user.id,
       comment: newComment,
     };
 
     try {
-      const response = await createComment(outfitId, commentId, commentData);
+      const response = await createComment(outfitId, written_review);
       setComments((prevComments) => [...prevComments, response.data]);
       setNewComment("");
     } catch (err) {
@@ -85,9 +85,9 @@ function CommentBox({ outfitId, commentId }) {
           <p>No comments yet. Be the first!</p>
         )}
         {comments.map((comment) => (
-          <React.Fragment key={comment.id || comment._id}>
-            <p className="comment-item">{comment.comment}</p>
-          </React.Fragment>
+          <div key={comment.id || comment._id} className="comment-item">
+            <p>{comment.written_rating}</p>
+          </div>
         ))}
       </div>
 
