@@ -206,7 +206,7 @@ const fetchUserClothing = async(user_id)=> {
   return response.rows;
 };
 
-const fetchAllClothing = async(id)=> {
+const fetchAllClothing = async()=> {
   const SQL = `
     SELECT * FROM clothing;
   `;
