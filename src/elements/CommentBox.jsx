@@ -3,13 +3,14 @@ import { getOutfitComments, createComment } from "../client/api";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/comments.css";
 import PullUsername from "./PullUsername";
+import DeleteCommentButton from "./DeleteCommentButton";
 
 function CommentBox({ outfitId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!outfitId) {
@@ -57,6 +58,7 @@ function CommentBox({ outfitId }) {
 
     setIsLoading(true);
     setError(null);
+    setCurrentComment(null);
 
     const written_review = {
       user_id: user.id,
@@ -88,9 +90,12 @@ function CommentBox({ outfitId }) {
         )}
         {comments.map((comment) => (
           <div key={comment.id || comment._id} className="comment-item">
-            <PullUsername userId={comment.user_id} />
-            <h4 className="spacer"> - </h4>
-            <p>{comment.written_rating}</p>
+            <div className="comment-data">
+              <PullUsername userId={comment.user_id} />
+              <h4 className="spacer"> - </h4>
+              <p>{comment.written_rating}</p>
+            </div>
+            {user && (user.is_admin || user.id === comment.user_id) && <DeleteCommentButton userId={comment.user_id} commentId={comment.id} />}
           </div>
         ))}
       </div>
