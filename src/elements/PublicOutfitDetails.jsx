@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   getOutfitById,
   getOutfitClothing,
@@ -9,6 +9,9 @@ import {
 import CommentBox from "./CommentBox";
 import "../stylesheets/outfitDetails.css";
 import PullUsername from "./PullUsername";
+import { useAuth } from "../client/authContext";
+import { deleteOutfit } from "../client/api";
+
 
 function PublicOutfitDetails() {
   const { outfitId } = useParams();
@@ -17,6 +20,9 @@ function PublicOutfitDetails() {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
+  const [actionError, setActionError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +91,21 @@ function PublicOutfitDetails() {
 
     fetchData();
   }, [outfitId]);
+
+  const handleDeleteOutfit = async () => {
+      if (!outfit || !user) return;
+      if (!window.confirm("Are you sure you want to delete this outfit?")) {
+        return;
+      }
+      setActionError(null);
+      try {
+        await deleteOutfit(outfit.id, { user_id: user.id });
+        navigate("/");
+      } catch (err) {
+        console.error("Failed to delete outfit:", err);
+        setActionError("Could not delete outfit. Please try again.");
+      }
+    };
 
   if (isLoading) {
     return <div className="loading-message">Loading outfit details...</div>;
@@ -160,6 +181,11 @@ function PublicOutfitDetails() {
             <p>No comments yet!</p>
           )}
         </div>
+        
+        {user && user.is_admin && <div className="adminDeleteOption">
+          <button onClick={handleDeleteOutfit}>Delete Outfit</button>
+        </div>}
+
       </div>
     </div>
   );

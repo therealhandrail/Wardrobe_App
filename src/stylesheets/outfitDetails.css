@@ -162,3 +162,8 @@
   font-size: 1.2em;
   color: #adb5bd;
 }
+
+.adminDeleteOption {
+  display: flex;
+  justify-content: center;
+}
