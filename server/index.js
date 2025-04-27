@@ -43,9 +43,8 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const { fileURLToPath } = require('url');
-const metaInfo = require('meta.url');
-const __filename = fileURLToPath(metaInfo); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
+const metaInfo = require('meta.url'); // get the resolved path to the file
+const __dirname = path.dirname(fileURLToPath(metaInfo)); // get the name of the directory
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "dist")));
 app.use(cors());
