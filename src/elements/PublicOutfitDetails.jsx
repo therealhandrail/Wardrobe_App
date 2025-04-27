@@ -34,6 +34,7 @@ function PublicOutfitDetails() {
 
       setIsLoading(true);
       setError(null);
+      setActionError(null);
       try {
         const outfitResponse = await getOutfitById(outfitId);
         const fetchedOutfit = outfitResponse.data?.[0];
@@ -183,6 +184,7 @@ function PublicOutfitDetails() {
         </div>
         
         {user && user.is_admin && <div className="adminDeleteOption">
+          {actionError && <p style={{ color: "red" }}>{actionError}</p>}
           <button onClick={handleDeleteOutfit}>Delete Outfit</button>
         </div>}
 
