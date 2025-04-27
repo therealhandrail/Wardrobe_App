@@ -42,10 +42,8 @@ const { seedDatabases } = require('./dbSeed');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-const { fileURLToPath } = require('url');
-const metaInfo = require('meta.url'); // get the resolved path to the file
 app.use(express.json());
-app.use(express.static(path.join(path.dirname(fileURLToPath(metaInfo)), "dist")));
+app.use(express.static(path.join(__dirname, "dist")));
 app.use(cors());
 //app.options('*', cors());
 
