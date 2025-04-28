@@ -45,6 +45,7 @@ const app = express();
 app.use(express.json());
 //app.use(express.static(path.join(__dirname, "dist/index.html")));
 app.get('/', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
+app.get('/Login', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
 app.get('/Register', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
 app.get('/AddItemPage', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
 app.get('/AddOutfitPage', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
