@@ -73,7 +73,7 @@ function MyOutfitDetails() {
     if (user) {
       fetchData();
     }
-  }, [outfitId]);
+  }, [outfitId, user]);
   if (isLoading) {
     return <div>Loading outfit details...</div>;
   }
