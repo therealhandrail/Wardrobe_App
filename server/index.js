@@ -52,6 +52,7 @@ app.get('/AddOutfitPage', (req, res)=> res.sendFile(path.join(__dirname, '../dis
 app.get('/MyClothing', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
 app.get('/admin', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
 app.get('/outfit/:outfitId', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
+app.get('/my-outfits/:outfitId', (req, res)=> res.sendFile(path.join(__dirname, '../dist/index.html')));
 app.use('/assets', express.static(path.join(__dirname, '../dist/assets')));
 app.use(cors());
 //app.options('*', cors());
