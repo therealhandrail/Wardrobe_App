@@ -23,9 +23,9 @@ const {
   fetchOutfitTags,
   fetchOutfitComments,
   fetchOutfitComment,
-  updateClothing,
+  // updateClothing,
   updateOutfit,
-  updateComment,
+  // updateComment,
   deleteClothing,
   deleteOutfit,
   deleteOutfitClothesbyClothing,
@@ -330,20 +330,20 @@ app.post('/api/outfits/:outfitId/outfitTags', isLoggedIn, async(req, res, next)=
   }
 });
 
-// Update clothing and outfits
-app.put('/api/clothing/:clothingId', isLoggedIn, async(req, res, next)=> {
-  try {
-    if(req.body.user_id !== req.user.id){
-      const error = Error('not authorized');
-      error.status = 401;
-      throw error;
-    }
-    res.status(201).send(await updateClothing({name: req.body.name, clothing_type: req.body.clothing_type, store_link: req.body.store_link, clothing_img_link: req.body.clothing_img_link, id: req.params.clothingId, user_id: req.body.user_id}));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
+// Update clothing and comments> Not necessary for the final product.  Turned into a stretch goal
+// app.put('/api/clothing/:clothingId', isLoggedIn, async(req, res, next)=> {
+//   try {
+//     if(req.body.user_id !== req.user.id){
+//       const error = Error('not authorized');
+//       error.status = 401;
+//       throw error;
+//     }
+//     res.status(201).send(await updateClothing({name: req.body.name, clothing_type: req.body.clothing_type, store_link: req.body.store_link, clothing_img_link: req.body.clothing_img_link, id: req.params.clothingId, user_id: req.body.user_id}));
+//   }
+//   catch(ex){
+//     next(ex);
+//   }
+// });
 
 app.put('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
   try {
@@ -359,20 +359,20 @@ app.put('/api/outfits/:outfitId', isLoggedIn, async(req, res, next)=> {
   }
 });
 
-// Update comments
-app.put('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, next)=> {
-  try {
-    if(req.params.userId !== req.user.id){
-      const error = Error('not authorized');
-      error.status = 401;
-      throw error;
-    }
-    res.send(await updateComment({ written_rating: req.body.written_rating, id: req.params.commentId, user_id: req.params.userId }));
-  }
-  catch(ex){
-    next(ex);
-  }
-});
+// // Update comments
+// app.put('/api/users/:userId/comments/:commentId', isLoggedIn, async(req, res, next)=> {
+//   try {
+//     if(req.params.userId !== req.user.id){
+//       const error = Error('not authorized');
+//       error.status = 401;
+//       throw error;
+//     }
+//     res.send(await updateComment({ written_rating: req.body.written_rating, id: req.params.commentId, user_id: req.params.userId }));
+//   }
+//   catch(ex){
+//     next(ex);
+//   }
+// });
 
 // Deletes clothing and outfits
 

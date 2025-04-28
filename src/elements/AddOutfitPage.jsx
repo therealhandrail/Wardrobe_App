@@ -4,7 +4,7 @@ import {
   getUserClothing,
   createOutfit,
   addClothingToOutfit,
-  addOutfitTag,
+  //addOutfitTag,
 } from "../client/api";
 import { useAuth } from "../client/authContext";
 import "../stylesheets/addOutfitForm.css";
@@ -15,7 +15,7 @@ const AddOutfitPage = () => {
   const [itemsError, setItemsError] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [name, setName] = useState("");
-  const [tags, setTags] = useState("");
+  //const [tags, setTags] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [success, setSuccess] = useState("");
@@ -92,23 +92,23 @@ const AddOutfitPage = () => {
       await Promise.all(addClothingPromises);
       console.log("Items added to outfit successfully.");
 
-      if (tags.trim() !== "") {
-        const tagArray = tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag !== "");
-        if (tagArray.length > 0) {
-          const tagPromises = tagArray.map((tag) =>
-            addOutfitTag(newOutfitId, { user_id: user.id, tag: tag })
-          );
-          await Promise.all(tagPromises);
-          console.log("Outfit tags added.");
-        }
-      }
+      // if (tags.trim() !== "") {
+      //   const tagArray = tags
+      //     .split(",")
+      //     .map((tag) => tag.trim())
+      //     .filter((tag) => tag !== "");
+      //   if (tagArray.length > 0) {
+      //     const tagPromises = tagArray.map((tag) =>
+      //       addOutfitTag(newOutfitId, { user_id: user.id, tag: tag })
+      //     );
+      //     await Promise.all(tagPromises);
+      //     console.log("Outfit tags added.");
+      //   }
+      // }
 
       setSuccess(`Outfit '${name}' created successfully!`);
       setName("");
-      setTags("");
+      //setTags("");
       setIsPrivate(false);
       setSelectedItems([]);
 
@@ -151,7 +151,7 @@ const AddOutfitPage = () => {
                 placeholder="e.g., Summer Casual"
               />
             </div>
-            <div>
+            {/* <div>
               <label htmlFor="outfitTags">Tags (comma-separated):</label>
               <input
                 id="outfitTags"
@@ -160,7 +160,7 @@ const AddOutfitPage = () => {
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
               />
-            </div>
+            </div> */}
             <div>
               <label htmlFor="isPrivate" className="checkbox-label">
                 <input
@@ -177,7 +177,7 @@ const AddOutfitPage = () => {
           </div>
 
           <div className="form-section">
-            <h3>Select Items (Max 10)</h3>
+            <h3>Select Items</h3>
             {loadingItems && <p>Loading your items...</p>}
             {itemsError && <p style={{ color: "red" }}>{itemsError}</p>}
             {!loadingItems && !itemsError && userItems.length === 0 && (

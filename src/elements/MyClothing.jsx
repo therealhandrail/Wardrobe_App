@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import "../stylesheets/myClothing.css";
 import { useAuth } from "../client/authContext";
 import { getUserClothing } from "../client/api.js";
@@ -7,7 +6,6 @@ import DeleteClothingButton from "./DeleteClothingButton.jsx";
 
 
 function MyClothing () {
-  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [clothing, setClothing] = useState([]);
   const { user, isAuthenticated } = useAuth();

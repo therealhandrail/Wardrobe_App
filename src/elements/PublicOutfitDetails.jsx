@@ -133,16 +133,16 @@ function PublicOutfitDetails() {
             {error}
           </p>
         )}
-        {outfit.tags && outfit.tags.length > 0 && (
+        {/* {outfit.tags && outfit.tags.length > 0 && (
           <div className="outfitTags">
             <strong>Tags:</strong>{" "}
             {outfit.tags.map((tag, index) => (
               <span key={index} className="tag">
-                {typeof tag === "string" ? tag : tag.name || "unknown tag"}
+                {typeof tag === "string" ? tag : tag.tag || "unknown tag"}
               </span>
             ))}
           </div>
-        )}
+        )} */}
         <div className="outfitClothingItems">
           <h2>Items in this Outfit:</h2>
           <div className="itemsGrid">
