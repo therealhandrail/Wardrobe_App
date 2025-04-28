@@ -45,7 +45,6 @@ const createTables = async()=> {
       clothing_id UUID REFERENCES clothing(id) NOT NULL,
       CONSTRAINT unique_outfit_id_clothing_id UNIQUE (outfit_id, clothing_id)
     );
-    // Tags were not necessary for the final product and were not included.
     CREATE TABLE clothing_tags(
       id UUID PRIMARY KEY,
       clothing_id UUID REFERENCES clothing(id) NOT NULL,
