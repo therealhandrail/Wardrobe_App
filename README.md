@@ -4,3 +4,5 @@ As a signed in user, you can view and comment on public outfits, add items, view
 Admin users have access to the admin console, which allows them to see a list of all users, and the access to delete users items.
 
 Link To Public Website: https://wardrobe-app-xb6n.onrender.com/
+
+To run locally, download these files, in the terminal run: npm i && npm run dev.  Then you will just need to open the localhost link that will pop up.  
