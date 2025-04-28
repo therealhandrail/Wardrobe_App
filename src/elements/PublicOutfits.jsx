@@ -33,20 +33,16 @@ function PublicOutfits() {
     }
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
-    // Might have to adjust based on how we input the tags
     return outfits.filter((outfit) => {
       const nameMatch = outfit.name
         ?.toLowerCase()
         .includes(lowerCaseSearchTerm);
-      const descriptionMatch = outfit.description
-        ?.toLowerCase()
-        .includes(lowerCaseSearchTerm);
-      const tagsMatch = outfit.tags?.some((tag) =>
-        typeof tag === "string"
-          ? tag.toLowerCase().includes(lowerCaseSearchTerm)
-          : tag.name?.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-      return nameMatch || descriptionMatch || tagsMatch;
+      // const tagsMatch = outfit.tags?.some((tag) =>
+      //   typeof tag === "string"
+      //     ? tag.toLowerCase().includes(lowerCaseSearchTerm)
+      //     : tag.name?.toLowerCase().includes(lowerCaseSearchTerm)
+      // );
+      return nameMatch;
     });
   }, [outfits, searchTerm]);
 

@@ -51,17 +51,13 @@ function MyOutfitBox() {
       const nameMatch = outfit.name
         ?.toLowerCase()
         .includes(lowerCaseSearchTerm);
-      const descriptionMatch = outfit.description
-        ?.toLowerCase()
-        .includes(lowerCaseSearchTerm);
-      // The tags need some work. It looks like they are sending to db, but not returning?
-      // no 401 or 404 so im not sure yet
-      const tagsMatch = outfit.tags?.some((tag) =>
-        typeof tag === "string"
-          ? tag.toLowerCase().includes(lowerCaseSearchTerm)
-          : tag.name?.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-      return nameMatch || descriptionMatch || tagsMatch;
+      // Tags not used
+      // const tagsMatch = outfit.tags?.some((tag) =>
+      //   typeof tag === "string"
+      //     ? tag.toLowerCase().includes(lowerCaseSearchTerm)
+      //     : tag.name?.toLowerCase().includes(lowerCaseSearchTerm)
+      // );
+      return nameMatch;
     });
   }, [outfits, searchTerm]);
 

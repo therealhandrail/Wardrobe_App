@@ -198,7 +198,7 @@ function MyOutfitDetails() {
           </label> */}
           <button onClick={handleDeleteOutfit}>Delete Outfit</button>
         </div>
-        {outfit.tags && outfit.tags.length > 0 && (
+        {/* {outfit.tags && outfit.tags.length > 0 && (
           <div className="outfitTags">
             <strong>Tags:</strong>{" "}
             {outfit.tags.map((tag, index) => (
@@ -207,7 +207,7 @@ function MyOutfitDetails() {
               </span>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

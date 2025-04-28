@@ -45,6 +45,7 @@ const createTables = async()=> {
       clothing_id UUID REFERENCES clothing(id) NOT NULL,
       CONSTRAINT unique_outfit_id_clothing_id UNIQUE (outfit_id, clothing_id)
     );
+    // Tags were not necessary for the final product and were not included.
     CREATE TABLE clothing_tags(
       id UUID PRIMARY KEY,
       clothing_id UUID REFERENCES clothing(id) NOT NULL,
@@ -181,7 +182,7 @@ const findUserWithToken = async(token)=> {
 };
 
 // Retrieve Functions > users, user, user's clothing, clothing, outfits, user's outfits, outfit, outfit clothes, 
-// outfit tags, clothing tags, outfit comments, outfit comment, user's outfit comments
+// outfit tags, clothing tags, outfit comments
 const fetchUsers = async()=> {
   const SQL = `
     SELECT * FROM users;
@@ -286,7 +287,7 @@ const fetchOutfitComment = async({id, outfit_id})=> {
   return response.rows;
 };
 
-//Unused
+// Unused and not needed in final product
 // const fetchUserComments = async(user_id)=> {
 //   const SQL = `
 //     SELECT * FROM comments WHERE user_id = $1
@@ -295,17 +296,17 @@ const fetchOutfitComment = async({id, outfit_id})=> {
 //   return response.rows;
 // };
 
-// Updates functions > clothing, outfits, comments
+// Updates functions > clothing, outfits, comments 
 
-const updateClothing = async({ name, clothing_type, store_link, clothing_img_link, id, user_id })=> {
-  const SQL = `
-    UPDATE clothing 
-    SET  name=$1, clothing_type=$2, store_link=$3, clothing_img_link=$4
-    WHERE id=$5 AND user_id=$6 RETURNING *
-  `; 
-  const response = await client.query(SQL, [name, clothing_type, store_link, clothing_img_link, id, user_id]);
-  return response.rows;
-};
+// const updateClothing = async({ name, clothing_type, store_link, clothing_img_link, id, user_id })=> {
+//   const SQL = `
+//     UPDATE clothing 
+//     SET  name=$1, clothing_type=$2, store_link=$3, clothing_img_link=$4
+//     WHERE id=$5 AND user_id=$6 RETURNING *
+//   `; 
+//   const response = await client.query(SQL, [name, clothing_type, store_link, clothing_img_link, id, user_id]);
+//   return response.rows;
+// };
 
 const updateOutfit = async({ name, previously_worn, share_publicly, id, user_id })=> {
   const SQL = `
@@ -317,15 +318,15 @@ const updateOutfit = async({ name, previously_worn, share_publicly, id, user_id 
   return response.rows;
 };
 
-const updateComment = async({ written_rating, id, user_id })=> {
-  const SQL = `
-    UPDATE comments 
-    SET  written_rating=$1
-    WHERE id=$2 AND user_id=$3 RETURNING *
-  `; 
-  const response = await client.query(SQL, [written_rating, id, user_id]);
-  return response.rows;
-};
+// const updateComment = async({ written_rating, id, user_id })=> {
+//   const SQL = `
+//     UPDATE comments 
+//     SET  written_rating=$1
+//     WHERE id=$2 AND user_id=$3 RETURNING *
+//   `; 
+//   const response = await client.query(SQL, [written_rating, id, user_id]);
+//   return response.rows;
+// };
 
 // Delete functions > clothing, outfit, outfit clothes by outfit, outfit clothes by clothing, clothing tag, outfit tag, comment, comments
 
@@ -438,13 +439,9 @@ module.exports = {
   fetchOutfitComments,
   fetchOutfitComment,
   // fetchUserComments,
-  // fetchCommentComments,
-  // fetchCommentComment,
-  // fetchUserComments,
-  updateClothing,
+  //updateClothing,
   updateOutfit,
-  updateComment,
-  updateComment,
+  //updateComment,
   deleteClothing,
   deleteOutfit,
   deleteOutfitClothesbyClothing,
